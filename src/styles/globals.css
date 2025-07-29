@@ -191,18 +191,32 @@
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    z-index: 20;
+    z-index: 100;
     color: white;
   }
 
   .hero-title {
     font-size: clamp(60px, 12vw, 180px);
     font-weight: 900;
-    letter-spacing: -0.02em;
+    letter-spacing: 0.05em;
     line-height: 0.9;
     margin: 0;
     font-family: var(--font-bebas);
     text-transform: uppercase;
+    opacity: 1 !important;
+    mix-blend-mode: normal !important;
+    text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.9),
+                 1px 1px 4px rgba(0, 0, 0, 0.8),
+                 -1px -1px 4px rgba(0, 0, 0, 0.8);
+  }
+  
+  .hero-title-gradient {
+    background: linear-gradient(to right, #DC143C, #800080) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    display: inline-block !important;
+    text-shadow: none !important;
   }
 
   .title-char {
@@ -273,6 +287,16 @@
     align-items: center;
     position: relative;
     z-index: 2;
+  }
+  
+  .content-section .hero-title {
+    position: relative;
+    z-index: 10;
+  }
+  
+  .content-section .hero-subtitle {
+    position: relative;
+    z-index: 10;
   }
 
   /* Cosmos specific styles */

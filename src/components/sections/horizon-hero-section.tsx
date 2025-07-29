@@ -603,17 +603,17 @@ export const Component = () => {
       </div>
 
       {/* Main content */}
-      <div className="hero-content cosmos-content">
-        <h1 ref={titleRef} className="hero-title" style={{ visibility: 'hidden' }}>
-          HORIZON
+      <div className="hero-content">
+        <h1 ref={titleRef} className="hero-title" style={{ visibility: 'hidden', color: '#DC143C' }}>
+          CAPTIVEZ
         </h1>
         
-        <div ref={subtitleRef} className="hero-subtitle cosmos-subtitle" style={{ visibility: 'hidden' }}>
+        <div ref={subtitleRef} className="hero-subtitle" style={{ visibility: 'hidden', color: '#FFFFFF' }}>
           <p className="subtitle-line">
-            Where vision meets reality, 
+            Un site sur mesure qui reflète votre excellence
           </p>
           <p className="subtitle-line">
-            we shape the future of tomorrow
+            Design premium, expérience inoubliable
           </p>
         </div>
       </div>
@@ -639,33 +639,39 @@ export const Component = () => {
       }}>
        {[...Array(2)].map((_, i) => {
           const titles = {
-            0: 'HORIZON',
-            1: 'COSMOS',
-            2: 'INFINITY'
+            0: 'CAPTIVEZ',
+            1: 'INNOVEZ',
+            2: 'DEVANCEZ'
           };
           
           const subtitles = {
             0: {
-              line1: 'Where vision meets reality,',
-              line2: 'we shape the future of tomorrow'
+              line1: 'Un site sur mesure qui reflète votre excellence',
+              line2: 'Design premium, expérience inoubliable'
             },
             1: {
-              line1: 'Beyond the boundaries of imagination,',
-              line2: 'lies the universe of possibilities'
+              line1: 'Intelligence artificielle et automatisations natives',
+              line2: 'Votre business ne dort jamais'
             },
             2: {
-              line1: 'In the space between thought and creation,',
-              line2: 'we find the essence of true innovation'
+              line1: 'Prenez une longueur d\'avance définitive',
+              line2: 'Laissez vos concurrents vous regarder partir'
             }
           };
           
+          const titleStyle = i === 0 
+            ? { color: '#800080' } // Violet pour INNOVEZ
+            : {}; // Style vide pour DEVANCEZ qui utilisera la classe gradient
+          
+          const titleClass = i === 1 ? "hero-title hero-title-gradient" : "hero-title";
+          
           return (
             <section key={i} className="content-section">
-              <h1 className="hero-title">
+              <h1 className={titleClass} style={titleStyle}>
                 {titles[i+1] || 'DEFAULT'}
               </h1>
           
-              <div className="hero-subtitle cosmos-subtitle">
+              <div className="hero-subtitle" style={{ color: '#FFFFFF' }}>
                 <p className="subtitle-line">
                   {subtitles[i+1].line1}
                 </p>
