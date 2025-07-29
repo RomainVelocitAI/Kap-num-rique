@@ -134,10 +134,10 @@
   }
 
   /* Hero Section Styles */
+
   .hero-container {
     position: relative;
     width: 100vw;
-    height: 100vh;
     background: #000;
   }
 
@@ -193,6 +193,11 @@
     text-align: center;
     z-index: 100;
     color: white;
+    pointer-events: none;
+  }
+  
+  .hero-content button {
+    pointer-events: auto;
   }
 
   .hero-title {
@@ -250,6 +255,11 @@
     letter-spacing: 2px;
     color: rgba(255, 255, 255, 0.6);
     margin-bottom: 10px;
+    transition: color 0.5s ease;
+  }
+  
+  .scroll-text.active {
+    color: rgba(255, 255, 255, 1);
   }
 
   .progress-track {

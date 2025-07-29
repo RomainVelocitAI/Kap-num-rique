@@ -41,6 +41,8 @@ export const Component = () => {
     locations: []
   });
 
+  const [heroHeight, setHeroHeight] = useState(300); // 300vh par défaut
+
   // Initialize Three.js
   useEffect(() => {
     const initThree = () => {
@@ -521,8 +523,9 @@ export const Component = () => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
       const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
-      const maxScroll = documentHeight - windowHeight;
+      // Utiliser la hauteur du hero (300vh) au lieu du document complet
+      const heroTotalHeight = heroHeight * windowHeight / 100;
+      const maxScroll = heroTotalHeight - windowHeight;
       const progress = Math.min(scrollY / maxScroll, 1);
       
       setScrollProgress(progress);
@@ -584,12 +587,12 @@ export const Component = () => {
     handleScroll(); // Set initial position
     
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [totalSections]);
+  }, [totalSections, heroHeight]);
 
 
 
   return (
-    <div ref={containerRef} className="hero-container cosmos-style">
+    <div ref={containerRef} className="hero-container cosmos-style" style={{ height: `${heroHeight}vh` }}>
       <canvas ref={canvasRef} className="hero-canvas" />
       
       {/* Side menu */}
