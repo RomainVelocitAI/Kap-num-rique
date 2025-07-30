@@ -15,6 +15,14 @@ const MarqueeComponent = dynamic(
   }
 );
 
+const ParticleTextEffect = dynamic(
+  () => import('@/components/ui/interactive-text-particle').then((mod) => mod.ParticleTextEffect),
+  {
+    ssr: false,
+    loading: () => <div className="text-gray-500 text-center">Chargement du texte...</div>
+  }
+);
+
 // Helper to parse 'rgb(r, g, b)' or 'rgba(r, g, b, a)' string to {r, g, b}
 const parseRgbColor = (colorString: string | null): { r: number; g: number; b: number } | null => {
     if (!colorString) return null;
@@ -458,23 +466,14 @@ const InteractiveArrowDemo: React.FC<InteractiveArrowDemoProps> = ({
                             
                             {/* Texte animé pour l'onglet Texte */}
                             {activeFeature === 'text' && (
-                                <div className="flex items-center justify-center w-full h-full p-8">
-                                    <div className="space-y-6 text-center max-w-lg">
-                                        <h3 className="text-2xl font-bold text-white">
-                                            Un message qui passe n'est plus suffisant
-                                        </h3>
-                                        <div className="space-y-4 text-gray-300">
-                                            <p>
-                                                Votre texte doit capturer, retenir et convaincre. Les gradients attirent l'œil, la hiérarchie guide la lecture, l'animation maintient l'attention.
-                                            </p>
-                                            <p>
-                                                Vos mots deviennent une expérience. Chaque phrase a son rythme, chaque titre son impact. C'est la différence entre informer et persuader.
-                                            </p>
-                                        </div>
-                                        <p className="text-sm text-gray-400 pt-4">
-                                            Le contenu qui convertit ne se lit pas, il se vit
-                                        </p>
-                                    </div>
+                                <div className="flex items-center justify-center w-full h-full">
+                                    <ParticleTextEffect
+                                        text="DIGIQO"
+                                        className="w-full h-full"
+                                        colors={['ff6b6b', 'feca57', '48dbfb', '1dd1a1']}
+                                        animationForce={60}
+                                        particleDensity={3}
+                                    />
                                 </div>
                             )}
                             
