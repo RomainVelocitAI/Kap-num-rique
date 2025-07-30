@@ -3,9 +3,12 @@
 import React, { useEffect, useRef, useCallback, useState } from 'react';
 import { Play } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import { Card, CardContent } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { CoolMode } from '@/components/ui/cool-mode';
 
-const FlipGallery = dynamic(
-  () => import('@/components/flip-gallery').then((mod) => mod.default || mod),
+const MarqueeComponent = dynamic(
+  () => import('@/components/marquee-component').then((mod) => mod.Marquee),
   {
     ssr: false,
     loading: () => <div className="text-gray-500 text-center">Chargement des animations...</div>
@@ -48,16 +51,107 @@ const defaultNavItems: NavItem[] = [
     { id: 'interaction', label: 'Interaction', onClick: () => console.info('Interaction clicked') },
 ];
 
+// Données des témoignages
+const testimonials = [
+  {
+    name: 'Ava Green',
+    username: '@ava',
+    body: 'Kap Numérique a décuplé ma productivité !',
+    img: 'https://randomuser.me/api/portraits/women/32.jpg',
+    country: 'Saint-Denis',
+  },
+  {
+    name: 'Ana Miller',
+    username: '@ana',
+    body: 'Les animations verticales changent tout !',
+    img: 'https://randomuser.me/api/portraits/women/68.jpg',
+    country: 'Saint-Pierre',
+  },
+  {
+    name: 'Mateo Rossi',
+    username: '@mat',
+    body: 'Des animations d\'une fluidité incroyable !',
+    img: 'https://randomuser.me/api/portraits/men/51.jpg',
+    country: 'Saint-Paul',
+  },
+  {
+    name: 'Maya Patel',
+    username: '@maya',
+    body: 'Une mise en place d\'une simplicité enfantine !',
+    img: 'https://randomuser.me/api/portraits/women/53.jpg',
+    country: 'Le Tampon',
+  },
+  {
+    name: 'Noah Smith',
+    username: '@noah',
+    body: 'Le meilleur composant de défilement !',
+    img: 'https://randomuser.me/api/portraits/men/33.jpg',
+    country: 'Saint-André',
+  },
+  {
+    name: 'Lucas Stone',
+    username: '@luc',
+    body: 'Très personnalisable et fluide.',
+    img: 'https://randomuser.me/api/portraits/men/22.jpg',
+    country: 'Saint-Leu',
+  },
+  {
+    name: 'Haruto Sato',
+    username: '@haru',
+    body: 'Performance impressionnante sur mobile !',
+    img: 'https://randomuser.me/api/portraits/men/85.jpg',
+    country: 'Saint-Joseph',
+  },
+  {
+    name: 'Emma Lee',
+    username: '@emma',
+    body: 'J\'adore la pause au survol !',
+    img: 'https://randomuser.me/api/portraits/women/45.jpg',
+    country: 'Saint-Benoît',
+  },
+  {
+    name: 'Carlos Ray',
+    username: '@carl',
+    body: 'Parfait pour les témoignages et logos.',
+    img: 'https://randomuser.me/api/portraits/men/61.jpg',
+    country: 'La Possession',
+  },
+];
+
+// Composant TestimonialCard
+function TestimonialCard({ img, name, username, body, country }: (typeof testimonials)[number]) {
+  return (
+    <Card className="w-48 bg-gray-800 border-gray-700">
+      <CardContent className="p-4">
+        <div className="flex items-center gap-2">
+          <Avatar className="size-8">
+            <AvatarImage src={img} alt={name} />
+            <AvatarFallback>{name[0]}</AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col">
+            <figcaption className="text-xs font-medium text-white flex items-center gap-1">
+              {name} <span className="text-[10px] text-gray-300">{country}</span>
+            </figcaption>
+            <p className="text-[10px] font-medium text-gray-400">{username}</p>
+          </div>
+        </div>
+        <blockquote className="mt-2 text-xs text-gray-200">{body}</blockquote>
+      </CardContent>
+    </Card>
+  );
+}
+
 const InteractiveArrowDemo: React.FC<InteractiveArrowDemoProps> = ({
     heading = "Captez l'attention instantanément",
     tagline = "En 2025, votre site doit bouger, surprendre et engager. Découvrez la puissance des interactions visuelles.",
-    buttonText = "Essayez maintenant",
+    buttonText = "Testez l'effet",
     imageUrl = "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&q=80",
     videoUrl,
     navItems = defaultNavItems,
 }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const targetRef = useRef<HTMLButtonElement>(null);
+    const buttonContainerRef = useRef<HTMLDivElement>(null);
     const mousePosRef = useRef({ x: null as number | null, y: null as number | null });
     const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
     const animationFrameIdRef = useRef<number | null>(null);
@@ -100,9 +194,9 @@ const InteractiveArrowDemo: React.FC<InteractiveArrowDemoProps> = ({
     }, []);
 
     const drawArrow = useCallback(() => {
-        if (!canvasRef.current || !targetRef.current || !ctxRef.current) return;
+        if (!canvasRef.current || !buttonContainerRef.current || !ctxRef.current) return;
 
-        const targetEl = targetRef.current;
+        const targetEl = buttonContainerRef.current.querySelector('button') || buttonContainerRef.current;
         const ctx = ctxRef.current;
         const mouse = mousePosRef.current;
 
@@ -163,7 +257,7 @@ const InteractiveArrowDemo: React.FC<InteractiveArrowDemoProps> = ({
         if (typeof window === 'undefined') return;
         
         const canvas = canvasRef.current;
-        if (!canvas || !targetRef.current) return;
+        if (!canvas || !buttonContainerRef.current) return;
 
         ctxRef.current = canvas.getContext("2d");
         const ctx = ctxRef.current;
@@ -266,78 +360,119 @@ const InteractiveArrowDemo: React.FC<InteractiveArrowDemoProps> = ({
             <main className="flex-grow flex flex-col items-center justify-center z-20 relative">
                 <div className="mt-12 sm:mt-16 lg:mt-24 flex flex-col items-center">
                     <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center px-4 bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent">
-                        {activeFeature === 'interactivity' && "Captez l'attention instantanément"}
-                        {activeFeature === 'animations' && "Des animations qui captivent"}
-                        {activeFeature === 'text' && "Du texte qui prend vie"}
-                        {activeFeature === 'interaction' && "Des interactions mémorables"}
+                        {activeFeature === 'interactivity' && "Le design qui convertit"}
+                        {activeFeature === 'animations' && "Le mouvement qui rassure"}
+                        {activeFeature === 'text' && "La typographie qui vend"}
+                        {activeFeature === 'interaction' && "L'interface qui engage"}
                     </h1>
                     <p className="mt-3 block text-gray-300 text-center text-base sm:text-lg px-4 max-w-xl">
-                        {activeFeature === 'interactivity' && "Suivez le mouvement naturel de vos visiteurs avec des interactions fluides"}
-                        {activeFeature === 'animations' && "Créez des expériences visuelles mémorables avec des transitions élégantes"}
-                        {activeFeature === 'text' && "Typographie dynamique et effets de texte qui racontent votre histoire"}
-                        {activeFeature === 'interaction' && "Engagez vos utilisateurs avec des éléments interactifs innovants"}
+                        {activeFeature === 'interactivity' && "Direction visuelle intuitive. Feedback instantané. Psychologie cognitive appliquée. Votre site ne se contente plus d'être beau : il convertit."}
+                        {activeFeature === 'animations' && "L'animation perpétuelle attire l'œil. La dynamique crée la confiance. Le mouvement raconte votre succès. C'est vivant, c'est crédible, et ça convainc."}
+                        {activeFeature === 'text' && "Hiérarchie visuelle maîtrisée. Contraste optimal. Lisibilité maximale. Votre message passe, votre marque s'impose."}
+                        {activeFeature === 'interaction' && "Micro-interactions précises. États visuels clairs. Parcours utilisateur optimisé jusqu'au moindre clic."}
                     </p>
                 </div>
 
-                <div className="mt-8 flex justify-center">
-                    <button
-                        ref={targetRef}
-                        className="py-3 px-6 rounded-xl bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-medium hover:shadow-lg hover:shadow-primary-500/25 transition-all duration-300 transform hover:scale-105"
-                    >
-                        {buttonText}
-                    </button>
-                </div>
+                {activeFeature === 'interactivity' && (
+                    <div ref={buttonContainerRef} className="mt-8 flex justify-center">
+                        <CoolMode>
+                            <button
+                                ref={targetRef}
+                                className="py-3 px-6 rounded-xl bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-medium hover:shadow-lg hover:shadow-primary-500/25 transition-all duration-300 transform hover:scale-105"
+                            >
+                                {buttonText}
+                            </button>
+                        </CoolMode>
+                    </div>
+                )}
 
                 <div className="mt-12 lg:mt-16 w-full max-w-screen-lg mx-auto overflow-hidden px-4 sm:px-2">
                     <div className="bg-gray-800 rounded-[2rem] p-[0.25rem]">
-                        <div className="relative h-[500px] sm:h-[600px] md:h-[700px] lg:h-[800px] rounded-[1.75rem] bg-gray-900 flex items-center justify-center overflow-hidden">
+                        <div className="relative h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px] rounded-[1.75rem] bg-gray-900 flex items-center justify-center overflow-hidden">
                             {/* Contenu conditionnel selon la fonctionnalité active */}
-                            {activeFeature === 'interactivity' && imageUrl && (
-                                <img
-                                    src={imageUrl}
-                                    alt="Démonstration interactive"
-                                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
-                                        showVideo ? 'opacity-0 pointer-events-none' : 'opacity-100'
-                                    }`}
-                                />
-                            )}
-                            {videoUrl && (
-                                <video
-                                    ref={videoRef}
-                                    src={videoUrl}
-                                    muted
-                                    playsInline
-                                    className={`w-full h-full object-cover transition-opacity duration-300 ${
-                                        showVideo ? 'opacity-100' : 'opacity-0 pointer-events-none'
-                                    }`}
-                                />
-                            )}
-                            {!showVideo && videoUrl && imageUrl && (
-                                <button
-                                    onClick={handlePlayButtonClick}
-                                    className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 z-20 p-2 sm:p-3 bg-primary-500/30 hover:bg-primary-500/50 text-white backdrop-blur-sm rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500"
-                                    aria-label="Lire la vidéo"
-                                >
-                                    <Play className="w-4 h-4 sm:w-5 sm:h-6" />
-                                </button>
+                            {activeFeature === 'interactivity' && (
+                                <div className="flex items-center justify-center w-full h-full p-8">
+                                    <div className="space-y-6 text-center max-w-lg">
+                                        <h3 className="text-2xl font-bold text-white">
+                                            Un site qui convertit guide naturellement vers l'action
+                                        </h3>
+                                        <div className="space-y-4 text-gray-300">
+                                            <p>
+                                                Vos visiteurs savent instantanément où cliquer. Pas de confusion, pas d'hésitation. Le parcours est évident.
+                                            </p>
+                                            <p>
+                                                Chaque interaction renforce leur envie d'aller plus loin. C'est subtil, c'est efficace, et ça transforme les curieux en clients.
+                                            </p>
+                                        </div>
+                                        <p className="text-sm text-gray-400 pt-4">
+                                            La différence entre un site joli et un site qui vend
+                                        </p>
+                                    </div>
+                                </div>
                             )}
                             
                             {/* Animation pour l'onglet Animations */}
                             {activeFeature === 'animations' && (
-                                <div className="w-full h-full flex items-center justify-center p-6">
-                                    <FlipGallery />
+                                <div className="w-full h-full flex items-center justify-center p-4 overflow-hidden">
+                                    <div className="border border-border rounded-lg relative flex h-full w-full max-w-[700px] flex-row items-center justify-center overflow-hidden gap-1 [perspective:300px]">
+                                        <div
+                                            className="flex flex-row items-center gap-4"
+                                            style={{
+                                                transform:
+                                                    'translateX(-100px) translateY(0px) translateZ(-100px) rotateX(20deg) rotateY(-10deg) rotateZ(20deg)',
+                                            }}
+                                        >
+                                            {/* Vertical Marquee (downwards) */}
+                                            <MarqueeComponent vertical pauseOnHover repeat={2} className="[--duration:30s]">
+                                                {testimonials.map((review) => (
+                                                    <TestimonialCard key={review.username} {...review} />
+                                                ))}
+                                            </MarqueeComponent>
+                                            {/* Vertical Marquee (upwards) */}
+                                            <MarqueeComponent vertical pauseOnHover reverse repeat={2} className="[--duration:30s]">
+                                                {testimonials.map((review) => (
+                                                    <TestimonialCard key={review.username} {...review} />
+                                                ))}
+                                            </MarqueeComponent>
+                                            {/* Vertical Marquee (downwards) */}
+                                            <MarqueeComponent vertical pauseOnHover repeat={2} className="[--duration:30s]">
+                                                {testimonials.map((review) => (
+                                                    <TestimonialCard key={review.username} {...review} />
+                                                ))}
+                                            </MarqueeComponent>
+                                            {/* Vertical Marquee (upwards) */}
+                                            <MarqueeComponent vertical pauseOnHover reverse repeat={2} className="[--duration:30s]">
+                                                {testimonials.map((review) => (
+                                                    <TestimonialCard key={review.username} {...review} />
+                                                ))}
+                                            </MarqueeComponent>
+                                        </div>
+                                        {/* Gradient overlays for vertical marquee */}
+                                        <div className="pointer-events-none absolute inset-x-0 top-0 h-1/4 bg-gradient-to-b from-background"></div>
+                                        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-background"></div>
+                                        <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-background"></div>
+                                        <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-background"></div>
+                                    </div>
                                 </div>
                             )}
                             
                             {/* Texte animé pour l'onglet Texte */}
                             {activeFeature === 'text' && (
                                 <div className="flex items-center justify-center w-full h-full p-8">
-                                    <div className="space-y-4 text-center">
-                                        <h3 className="text-4xl font-bold bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent animate-gradient">
-                                            Texte Dynamique
+                                    <div className="space-y-6 text-center max-w-lg">
+                                        <h3 className="text-2xl font-bold text-white">
+                                            Un message qui passe n'est plus suffisant
                                         </h3>
-                                        <p className="text-gray-300 animate-fade-in-up">
-                                            Typographie qui captive et communique
+                                        <div className="space-y-4 text-gray-300">
+                                            <p>
+                                                Votre texte doit capturer, retenir et convaincre. Les gradients attirent l'œil, la hiérarchie guide la lecture, l'animation maintient l'attention.
+                                            </p>
+                                            <p>
+                                                Vos mots deviennent une expérience. Chaque phrase a son rythme, chaque titre son impact. C'est la différence entre informer et persuader.
+                                            </p>
+                                        </div>
+                                        <p className="text-sm text-gray-400 pt-4">
+                                            Le contenu qui convertit ne se lit pas, il se vit
                                         </p>
                                     </div>
                                 </div>
@@ -345,16 +480,29 @@ const InteractiveArrowDemo: React.FC<InteractiveArrowDemoProps> = ({
                             
                             {/* Interaction pour l'onglet Interaction */}
                             {activeFeature === 'interaction' && (
-                                <div className="flex items-center justify-center w-full h-full">
-                                    <button className="px-8 py-4 bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-medium rounded-lg hover:scale-110 transition-transform duration-300 hover:shadow-2xl hover:shadow-primary-500/50">
-                                        Cliquez-moi !
-                                    </button>
+                                <div className="flex items-center justify-center w-full h-full p-8">
+                                    <div className="space-y-8 text-center max-w-lg">
+                                        <button className="px-8 py-4 bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-medium rounded-lg hover:scale-110 transition-transform duration-300 hover:shadow-2xl hover:shadow-primary-500/50">
+                                            Call-to-Action Premium
+                                        </button>
+                                        <div className="space-y-2">
+                                            <p className="text-sm text-gray-400">
+                                                Transformation au survol : scale 110%
+                                            </p>
+                                            <p className="text-sm text-gray-400">
+                                                Shadow dynamique avec couleur de marque
+                                            </p>
+                                            <p className="text-sm text-gray-400">
+                                                Transition fluide 300ms optimisée
+                                            </p>
+                                        </div>
+                                        <p className="text-base text-white font-medium">
+                                            +23% de conversions avec des CTA animés
+                                        </p>
+                                    </div>
                                 </div>
                             )}
                             
-                            {!imageUrl && !videoUrl && activeFeature === 'interactivity' && (
-                                <div className="text-gray-500 italic">Zone de contenu interactif</div>
-                            )}
                         </div>
                     </div>
                 </div>
