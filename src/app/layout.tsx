@@ -7,12 +7,16 @@ const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
   display: 'swap',
+  preload: true,
+  fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
 })
 
 const playfair = Playfair_Display({ 
   subsets: ['latin'],
   variable: '--font-playfair',
   display: 'swap',
+  preload: false, // Pas critique pour le FCP
+  fallback: ['Georgia', 'serif'],
 })
 
 const bebas = Bebas_Neue({ 
@@ -20,6 +24,8 @@ const bebas = Bebas_Neue({
   subsets: ['latin'],
   variable: '--font-bebas',
   display: 'swap',
+  preload: true, // Utilisé dans le Hero
+  fallback: ['Impact', 'sans-serif'],
 })
 
 export const metadata: Metadata = {
