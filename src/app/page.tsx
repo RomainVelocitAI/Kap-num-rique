@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Header from '@/components/layout/Header'
 import { Component as HeroSection } from '@/components/sections/horizon-hero-section'
-import KapNumeriqueSection from '@/components/sections/kap-numerique-section'
+import KapNumeriquePremium from '@/components/sections/kap-numerique-premium'
 
 export default function Home() {
   const [showHeader, setShowHeader] = useState(false)
@@ -23,7 +23,7 @@ export default function Home() {
       {showHeader && <Header />}
       <main>
         <HeroSection />
-        <KapNumeriqueSection />
+        <KapNumeriquePremium />
       </main>
     </>
   )
