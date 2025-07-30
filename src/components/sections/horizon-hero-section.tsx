@@ -619,9 +619,9 @@ export const Component = () => {
 
       {/* Main content */}
       <div className="hero-content">
-        <h1 ref={titleRef} className="hero-title" style={{ visibility: 'hidden', color: '#DC143C' }}>
+        <div ref={titleRef} className="hero-title" style={{ visibility: 'hidden', color: '#DC143C' }}>
           CAPTIVEZ
-        </h1>
+        </div>
         
         <div ref={subtitleRef} className="hero-subtitle" style={{ visibility: 'hidden', color: '#FFFFFF' }}>
           <p className="subtitle-line">

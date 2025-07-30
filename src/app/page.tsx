@@ -37,6 +37,10 @@ export default function Home() {
 
   return (
     <>
+      {/* H1 pour le SEO - invisible mais présent pour les moteurs de recherche */}
+      <h1 className="sr-only">
+        Création de Sites Web Professionnels à La Réunion - Kap Numérique - Développement Digital
+      </h1>
       {showHeader && <Header />}
       <main>
         <HeroOptimized />
