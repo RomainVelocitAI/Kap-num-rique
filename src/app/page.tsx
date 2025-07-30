@@ -1,26 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import dynamic from 'next/dynamic'
 import Header from '../components/layout/Header'
-import HeroOptimized from '../components/sections/hero-optimized'
-
-// Lazy load des sections non critiques
-const KapNumeriquePremium = dynamic(
-  () => import('../components/sections/kap-numerique-premium'),
-  { 
-    loading: () => <div className="animate-pulse bg-gray-100 h-96" />,
-    ssr: true 
-  }
-)
-
-const TechnicalShowcase = dynamic(
-  () => import('../components/sections/technical-showcase'),
-  { 
-    loading: () => <div className="animate-pulse bg-black h-screen" />,
-    ssr: false // Désactive SSR car utilise window et performance API
-  }
-)
+import HeroClient from '../components/sections/hero-client'
+import KapNumeriquePremium from '../components/sections/kap-numerique-premium'
+import TechnicalShowcase from '../components/sections/technical-showcase'
+import VisualEngagementSection from '../components/sections/visual-engagement-section'
+import ClientOnly from '../components/ui/client-only'
 
 export default function Home() {
   const [showHeader, setShowHeader] = useState(false)
@@ -43,7 +29,7 @@ export default function Home() {
       </h1>
       {showHeader && <Header />}
       <main>
-        <HeroOptimized />
+        <HeroClient />
         {/* Masque pour cacher le canvas Three.js après le Hero */}
         <div 
           className="relative bg-white" 
@@ -54,7 +40,12 @@ export default function Home() {
           }}
         >
           <KapNumeriquePremium />
-          <TechnicalShowcase />
+          <ClientOnly>
+            <TechnicalShowcase />
+          </ClientOnly>
+          <ClientOnly>
+            <VisualEngagementSection />
+          </ClientOnly>
         </div>
       </main>
     </>

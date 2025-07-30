@@ -1,15 +1,12 @@
-'use client'
-
-export default function HeroPlaceholder() {
+export default function HeroStatic() {
   return (
     <div className="hero-container relative min-h-screen flex items-center justify-center bg-gradient-to-b from-black via-gray-900 to-black">
-      {/* Contenu principal */}
       <div className="hero-content relative z-10">
-        <div className="hero-title text-[#DC143C] opacity-0 translate-y-5">
+        <div className="hero-title text-[#DC143C]">
           CAPTIVEZ
         </div>
         
-        <div className="hero-subtitle text-white opacity-0 translate-y-5">
+        <div className="hero-subtitle text-white">
           <p className="subtitle-line">
             Un site sur mesure qui reflète votre excellence
           </p>
@@ -19,8 +16,7 @@ export default function HeroPlaceholder() {
         </div>
       </div>
 
-      {/* Indicateur de scroll */}
-      <div className="scroll-progress opacity-0">
+      <div className="scroll-progress">
         <div className="scroll-text">SCROLL</div>
         <div className="progress-track">
           <div className="progress-fill w-0" />

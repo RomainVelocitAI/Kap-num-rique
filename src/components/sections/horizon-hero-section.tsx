@@ -3,19 +3,19 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export const Component = () => {
-  const containerRef = useRef(null);
-  const canvasRef = useRef(null);
-  const titleRef = useRef(null);
-  const subtitleRef = useRef(null);
-  const scrollProgressRef = useRef(null);
-  const menuRef = useRef(null);
+const HorizonHeroSection = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const titleRef = useRef<HTMLDivElement>(null);
+  const subtitleRef = useRef<HTMLDivElement>(null);
+  const scrollProgressRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const smoothCameraPos = useRef({ x: 0, y: 30, z: 100 });
   const cameraVelocity = useRef({ x: 0, y: 0, z: 0 });
@@ -26,7 +26,20 @@ export const Component = () => {
   const [sectionsVisible, setSectionsVisible] = useState(false);
   const totalSections = 2;
   
-  const threeRefs = useRef({
+  const threeRefs = useRef<{
+    scene: THREE.Scene | null;
+    camera: THREE.PerspectiveCamera | null;
+    renderer: THREE.WebGLRenderer | null;
+    composer: EffectComposer | null;
+    stars: THREE.Points[];
+    nebula: THREE.Mesh | null;
+    mountains: THREE.Mesh[];
+    animationId: number | null;
+    targetCameraX: number;
+    targetCameraY: number;
+    targetCameraZ: number;
+    locations: number[];
+  }>({
     scene: null,
     camera: null,
     renderer: null,
@@ -45,6 +58,8 @@ export const Component = () => {
 
   // Initialize Three.js
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     const initThree = () => {
       const { current: refs } = threeRefs;
       
@@ -355,14 +370,18 @@ export const Component = () => {
 
       // Update stars
       refs.stars.forEach((starField) => {
-        if (starField.material.uniforms) {
-          starField.material.uniforms.time.value = time;
+        const material = starField.material as any;
+        if (material && material.uniforms) {
+          material.uniforms.time.value = time;
         }
       });
 
       // Update nebula
-      if (refs.nebula && refs.nebula.material.uniforms) {
-        refs.nebula.material.uniforms.time.value = time * 0.5;
+      if (refs.nebula) {
+        const material = refs.nebula.material as any;
+        if (material && material.uniforms) {
+          material.uniforms.time.value = time * 0.5;
+        }
       }
 
       // Smooth camera movement with easing
@@ -425,17 +444,26 @@ export const Component = () => {
       // Dispose Three.js resources
       refs.stars.forEach(starField => {
         starField.geometry.dispose();
-        starField.material.dispose();
+        const material = starField.material as any;
+        if (material && material.dispose) {
+          material.dispose();
+        }
       });
 
       refs.mountains.forEach(mountain => {
         mountain.geometry.dispose();
-        mountain.material.dispose();
+        const material = mountain.material as any;
+        if (material && material.dispose) {
+          material.dispose();
+        }
       });
 
       if (refs.nebula) {
         refs.nebula.geometry.dispose();
-        refs.nebula.material.dispose();
+        const material = refs.nebula.material as any;
+        if (material && material.dispose) {
+          material.dispose();
+        }
       }
 
       if (refs.renderer) {
@@ -455,7 +483,7 @@ export const Component = () => {
 
   // GSAP Animations - Run after component is ready
   useEffect(() => {
-    if (!isReady) return;
+    if (!isReady || typeof window === 'undefined') return;
     
     const tl = gsap.timeline();
 
@@ -520,6 +548,8 @@ export const Component = () => {
 
   // Scroll handling
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     const handleScroll = () => {
       const scrollY = window.scrollY;
       const windowHeight = window.innerHeight;
@@ -701,3 +731,5 @@ export const Component = () => {
     </div>
   );
 };
+
+export default HorizonHeroSection;
