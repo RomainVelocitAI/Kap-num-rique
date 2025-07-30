@@ -55,12 +55,12 @@ export default function Header() {
                 <div className="absolute -inset-1 bg-gradient-to-br from-primary to-secondary rounded-xl blur opacity-30"></div>
               </div>
               <div>
-                <h1 className={cn(
+                <div className={cn(
                   "text-2xl font-display tracking-tight transition-colors",
                   isScrolled ? "text-gray-900" : "text-white"
                 )}>
                   Kap Numérique
-                </h1>
+                </div>
                 <p className={cn(
                   "text-xs font-medium transition-colors",
                   isScrolled ? "text-gray-600" : "text-white/80"

@@ -293,6 +293,7 @@ export default function TechnicalShowcase() {
                   label="Structure H1"
                   status={metrics.seoScore.h1Count === 1}
                   detail={`${metrics.seoScore.h1Count} balise(s) H1`}
+                  warning={metrics.seoScore.h1Count > 1 ? "Multiple H1 détectés" : undefined}
                 />
                 
                 <SEOItem
@@ -399,13 +400,16 @@ const MetricCard = ({ icon, title, value, subtitle, status }: any) => (
   </motion.div>
 );
 
-const SEOItem = ({ label, status, detail }: any) => (
+const SEOItem = ({ label, status, detail, warning }: any) => (
   <div className="flex items-center justify-between p-3 bg-gray-800/30 rounded-lg">
     <div className="flex items-center space-x-3">
-      <div className={`w-2 h-2 rounded-full ${status ? 'bg-green-400' : 'bg-red-400'}`} />
+      <div className={`w-2 h-2 rounded-full ${status ? 'bg-green-400' : warning ? 'bg-yellow-400' : 'bg-red-400'}`} />
       <span className="text-gray-300">{label}</span>
     </div>
-    <span className="text-gray-500 text-sm">{detail}</span>
+    <div className="text-right">
+      <span className="text-gray-500 text-sm">{detail}</span>
+      {warning && <div className="text-yellow-400 text-xs mt-1">{warning}</div>}
+    </div>
   </div>
 );
 

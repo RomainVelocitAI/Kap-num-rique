@@ -682,9 +682,9 @@ export const Component = () => {
           
           return (
             <section key={i} className="content-section">
-              <h1 className={titleClass} style={titleStyle}>
+              <div className={titleClass} style={titleStyle}>
                 {titles[i+1] || 'DEFAULT'}
-              </h1>
+              </div>
           
               <div className="hero-subtitle" style={{ color: '#FFFFFF' }}>
                 <p className="subtitle-line">

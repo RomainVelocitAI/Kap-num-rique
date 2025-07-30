@@ -75,6 +75,9 @@ export const metadata: Metadata = {
   verification: {
     google: 'google-site-verification-code',
   },
+  alternates: {
+    canonical: 'https://kap-numerique.re',
+  },
 }
 
 export default function RootLayout({
