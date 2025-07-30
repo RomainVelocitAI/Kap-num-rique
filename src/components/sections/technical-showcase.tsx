@@ -189,13 +189,23 @@ export default function TechnicalShowcase() {
   }, []);
 
   const titleComponent = (
-    <div className="space-y-4">
+    <div className="space-y-6 max-w-4xl mx-auto">
       <h2 className="text-5xl md:text-7xl font-display font-bold text-white">
         X = TECHNIQUE
       </h2>
-      <p className="text-xl md:text-2xl text-gray-300">
-        Les métriques de ce site en temps réel
-      </p>
+      <div className="space-y-4">
+        <p className="text-2xl md:text-3xl text-gold-500 font-medium">
+          La performance n'est pas une option
+        </p>
+        <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
+          <span className="text-red-500 font-bold">53% des visiteurs</span> abandonnent un site qui met plus de 3 secondes à charger.
+          Chaque milliseconde compte. Un site rapide, c'est plus de conversions, un meilleur référencement, 
+          et des utilisateurs satisfaits.
+        </p>
+        <p className="text-lg md:text-xl text-gray-400 italic">
+          Analysez les performances de ce site en temps réel ↓
+        </p>
+      </div>
     </div>
   );
 
@@ -233,7 +243,14 @@ export default function TechnicalShowcase() {
           <div className="flex-1 p-6 overflow-y-auto bg-black">
             {/* PERFORMANCE TAB */}
             {activeTab === 'performance' && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-6">
+                <div className="text-center mb-8 p-6 bg-gradient-to-r from-gray-900 to-gray-800 rounded-xl border border-gray-700">
+                  <p className="text-lg text-gray-300">
+                    <span className="text-gold-500 font-bold">Amazon</span> perd 1.6 milliard de dollars par an pour chaque seconde de lenteur.
+                    Votre site mérite la même attention.
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <MetricCard
                   icon="⚡"
                   title="Temps de chargement"
@@ -271,22 +288,35 @@ export default function TechnicalShowcase() {
                     percentage={calculatePerformanceScore(metrics)}
                   />
                 </div>
+                </div>
               </div>
             )}
 
             {/* SEO TAB */}
             {activeTab === 'seo' && (
-              <div className="space-y-3">
+              <div className="space-y-4">
+                <div className="text-center mb-6 p-5 bg-gradient-to-r from-gray-900 to-gray-800 rounded-xl border border-gray-700">
+                  <p className="text-lg text-gray-300">
+                    <span className="text-gold-500 font-bold">75% du trafic</span> va aux 3 premiers résultats Google.
+                    Un SEO technique parfait, c'est votre ticket d'entrée.
+                  </p>
+                </div>
                 <SEOItem
                   label="Balise Title"
                   status={metrics.seoScore.hasTitle}
                   detail={`${metrics.seoScore.titleLength} caractères`}
+                  recommendation={metrics.seoScore.titleLength < 30 ? "Trop court. Google préfère 50-60 caractères pour un title optimal." : 
+                                  metrics.seoScore.titleLength > 60 ? "Trop long. Sera tronqué dans les résultats Google après 60 caractères." : 
+                                  "Parfait ! Entre 50-60 caractères, idéal pour le SEO."}
                 />
                 
                 <SEOItem
                   label="Meta Description"
                   status={metrics.seoScore.hasMetaDescription}
                   detail={`${metrics.seoScore.descriptionLength} caractères`}
+                  recommendation={metrics.seoScore.descriptionLength < 120 ? "Un peu court. Visez 150-160 caractères pour maximiser l'espace dans les SERP." : 
+                                  metrics.seoScore.descriptionLength > 160 ? "Trop long. Google tronquera après 160 caractères." : 
+                                  "Bonne longueur ! Utilisez des mots-clés et un call-to-action."}
                 />
                 
                 <SEOItem
@@ -294,18 +324,26 @@ export default function TechnicalShowcase() {
                   status={metrics.seoScore.h1Count === 1}
                   detail={`${metrics.seoScore.h1Count} balise(s) H1`}
                   warning={metrics.seoScore.h1Count > 1 ? "Multiple H1 détectés" : undefined}
+                  recommendation={metrics.seoScore.h1Count === 0 ? "Critique ! Ajoutez un H1 avec vos mots-clés principaux." :
+                                  metrics.seoScore.h1Count > 1 ? "Un seul H1 par page. Utilisez des H2-H6 pour la hiérarchie." :
+                                  "Excellent ! Un seul H1, c'est la règle d'or du SEO."}
                 />
                 
                 <SEOItem
                   label="Images optimisées"
-                  status={metrics.seoScore.imagesWithAlt === metrics.seoScore.totalImages}
+                  status={metrics.seoScore.imagesWithAlt === metrics.seoScore.totalImages || metrics.seoScore.totalImages === 0}
                   detail={`${metrics.seoScore.imagesWithAlt}/${metrics.seoScore.totalImages} avec alt`}
+                  recommendation={metrics.seoScore.totalImages === 0 ? "Pas d'images détectées. C'est OK si votre contenu n'en nécessite pas." :
+                                  metrics.seoScore.imagesWithAlt < metrics.seoScore.totalImages ? "Ajoutez des alt descriptifs pour l'accessibilité et le SEO images." :
+                                  "Parfait ! Toutes les images sont accessibles et indexables."}
                 />
                 
                 <SEOItem
                   label="Open Graph"
                   status={metrics.seoScore.hasOpenGraph}
                   detail="Partage réseaux sociaux"
+                  recommendation={metrics.seoScore.hasOpenGraph ? "Excellent ! Vos partages sociaux auront une belle preview." :
+                                  "Ajoutez og:title, og:description et og:image pour des partages attractifs."}
                 />
                 
                 <div className="mt-6 p-4 bg-gold-500/10 rounded-lg border border-gold-500/20">
@@ -319,6 +357,12 @@ export default function TechnicalShowcase() {
             {/* RÉSEAU TAB */}
             {activeTab === 'réseau' && (
               <div className="space-y-6">
+                <div className="text-center mb-6 p-5 bg-gradient-to-r from-gray-900 to-gray-800 rounded-xl border border-gray-700">
+                  <p className="text-lg text-gray-300">
+                    <span className="text-gold-500 font-bold">47% du trafic web</span> est mobile.
+                    La latence et l'optimisation réseau sont cruciales pour vos visiteurs.
+                  </p>
+                </div>
                 <div className="bg-gray-800/50 rounded-xl p-6 text-center">
                   <div className="text-gray-400 text-sm mb-2">Votre position</div>
                   <div className="text-2xl font-bold text-white">
@@ -348,7 +392,7 @@ export default function TechnicalShowcase() {
                     />
                   </div>
                   <div className="text-sm text-green-400 mt-2">
-                    {metrics.latency < 50 ? 'Excellent' : metrics.latency < 100 ? 'Bon' : 'Moyen'}
+                    {metrics.latency < 100 ? 'Excellent' : metrics.latency < 400 ? 'Bon' : 'Moyen'}
                   </div>
                 </div>
 
@@ -366,6 +410,19 @@ export default function TechnicalShowcase() {
                 </div>
               </div>
             )}
+          </div>
+          
+          {/* Message de conclusion */}
+          <div className="p-6 border-t border-gray-600 bg-gradient-to-r from-gray-900 to-black">
+            <div className="text-center space-y-3">
+              <p className="text-xl font-display text-gold-500">
+                Un site lent, c'est un site mort.
+              </p>
+              <p className="text-gray-400">
+                Ne laissez pas la technique saboter votre succès. 
+                <span className="text-white font-medium"> Investissez dans la performance.</span>
+              </p>
+            </div>
           </div>
         </div>
       </ContainerScroll>
@@ -400,16 +457,23 @@ const MetricCard = ({ icon, title, value, subtitle, status }: any) => (
   </motion.div>
 );
 
-const SEOItem = ({ label, status, detail, warning }: any) => (
-  <div className="flex items-center justify-between p-3 bg-gray-800/30 rounded-lg">
-    <div className="flex items-center space-x-3">
-      <div className={`w-2 h-2 rounded-full ${status ? 'bg-green-400' : warning ? 'bg-yellow-400' : 'bg-red-400'}`} />
-      <span className="text-gray-300">{label}</span>
+const SEOItem = ({ label, status, detail, warning, recommendation }: any) => (
+  <div className="space-y-2">
+    <div className="flex items-center justify-between p-3 bg-gray-800/30 rounded-lg">
+      <div className="flex items-center space-x-3">
+        <div className={`w-2 h-2 rounded-full ${status ? 'bg-green-400' : warning ? 'bg-yellow-400' : 'bg-red-400'}`} />
+        <span className="text-gray-300">{label}</span>
+      </div>
+      <div className="text-right">
+        <span className="text-gray-500 text-sm">{detail}</span>
+        {warning && <div className="text-yellow-400 text-xs mt-1">{warning}</div>}
+      </div>
     </div>
-    <div className="text-right">
-      <span className="text-gray-500 text-sm">{detail}</span>
-      {warning && <div className="text-yellow-400 text-xs mt-1">{warning}</div>}
-    </div>
+    {recommendation && (
+      <div className="ml-6 px-3 py-2 text-xs text-gray-400 italic bg-gray-900/50 rounded border-l-2 border-gold-500/30">
+        💡 {recommendation}
+      </div>
+    )}
   </div>
 );
 
@@ -455,7 +519,8 @@ const calculateSEOScore = (seo: any) => {
   if (seo.hasTitle) score += 20;
   if (seo.hasMetaDescription) score += 20;
   if (seo.h1Count === 1) score += 20;
-  if (seo.totalImages > 0 && seo.imagesWithAlt === seo.totalImages) score += 20;
+  // Si toutes les images ont un alt OU s'il n'y a pas d'images (pas de pénalité)
+  if (seo.totalImages === 0 || seo.imagesWithAlt === seo.totalImages) score += 20;
   if (seo.hasOpenGraph) score += 20;
   return score;
 };

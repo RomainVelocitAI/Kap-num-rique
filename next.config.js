@@ -78,10 +78,11 @@ const nextConfig = {
             value: 'origin-when-cross-origin'
           },
           // Headers de performance
-          {
-            key: 'Link',
-            value: '</fonts/inter-latin.woff2>; rel=preload; as=font; type=font/woff2; crossorigin=anonymous'
-          },
+          // Font preload désactivé car le fichier n'existe pas
+          // {
+          //   key: 'Link',
+          //   value: '</fonts/inter-latin.woff2>; rel=preload; as=font; type=font/woff2; crossorigin=anonymous'
+          // },
           {
             key: 'Cache-Control',
             value: 'public, max-age=31536000, immutable'
