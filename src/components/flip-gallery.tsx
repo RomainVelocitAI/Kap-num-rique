@@ -11,8 +11,8 @@ const images = [
   { title: 'Ramiro Checchi', url: 'https://picsum.photos/id/503/600/1000' }
 ];
 
-const FLIP_SPEED = 750;
-const flipTiming = { duration: FLIP_SPEED, iterations: 1 };
+const FLIP_SPEED = 400; // Réduit de 750ms à 400ms pour une animation plus rapide
+const flipTiming = { duration: FLIP_SPEED, iterations: 1, easing: 'cubic-bezier(0.4, 0.0, 0.2, 1)' };
 
 // flip down
 const flipAnimationTop = [
@@ -43,11 +43,17 @@ export default function FlipGallery() {
   const uniteRef = useRef<HTMLElement[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // initialise first image once
+  // initialise first image once and preload all images
   useEffect(() => {
     if (!containerRef.current) return;
     uniteRef.current = Array.from(containerRef.current.querySelectorAll('.unite'));
     defineFirstImg();
+    
+    // Précharger toutes les images pour éviter le lag
+    images.forEach((img) => {
+      const preloadImg = new Image();
+      preloadImg.src = img.url;
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -91,7 +97,7 @@ export default function FlipGallery() {
       const delay =
         (isReverse && (idx !== 1 && idx !== 2)) ||
         (!isReverse && (idx === 1 || idx === 2))
-          ? FLIP_SPEED - 200
+          ? FLIP_SPEED - 150 // Réduit de 200ms à 150ms
           : 0;
 
       setTimeout(() => {
@@ -189,6 +195,9 @@ export default function FlipGallery() {
           height: 50%;
           overflow: hidden;
           background-size: 240px 400px;
+          backface-visibility: hidden;
+          transform: translateZ(0);
+          will-change: transform;
         }
 
         @media (min-width: 600px) {
