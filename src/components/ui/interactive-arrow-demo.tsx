@@ -23,6 +23,14 @@ const ParticleTextEffect = dynamic(
   }
 );
 
+const ScratchToReveal = dynamic(
+  () => import('@/components/magicui/scratch-to-reveal').then((mod) => mod.ScratchToReveal),
+  {
+    ssr: false,
+    loading: () => <div className="text-gray-500 text-center">Chargement de l'interaction...</div>
+  }
+);
+
 // Helper to parse 'rgb(r, g, b)' or 'rgba(r, g, b, a)' string to {r, g, b}
 const parseRgbColor = (colorString: string | null): { r: number; g: number; b: number } | null => {
     if (!colorString) return null;
@@ -370,14 +378,14 @@ const InteractiveArrowDemo: React.FC<InteractiveArrowDemoProps> = ({
                     <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center px-4 bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent">
                         {activeFeature === 'interactivity' && "Le design qui convertit"}
                         {activeFeature === 'animations' && "Le mouvement qui rassure"}
-                        {activeFeature === 'text' && "La typographie qui vend"}
-                        {activeFeature === 'interaction' && "L'interface qui engage"}
+                        {activeFeature === 'text' && "Le texte devient expérience"}
+                        {activeFeature === 'interaction' && "L'interactivité qui fascine"}
                     </h1>
                     <p className="mt-3 block text-gray-300 text-center text-base sm:text-lg px-4 max-w-xl">
                         {activeFeature === 'interactivity' && "Direction visuelle intuitive. Feedback instantané. Psychologie cognitive appliquée. Votre site ne se contente plus d'être beau : il convertit."}
                         {activeFeature === 'animations' && "L'animation perpétuelle attire l'œil. La dynamique crée la confiance. Le mouvement raconte votre succès. C'est vivant, c'est crédible, et ça convainc."}
-                        {activeFeature === 'text' && "Hiérarchie visuelle maîtrisée. Contraste optimal. Lisibilité maximale. Votre message passe, votre marque s'impose."}
-                        {activeFeature === 'interaction' && "Micro-interactions précises. États visuels clairs. Parcours utilisateur optimisé jusqu'au moindre clic."}
+                        {activeFeature === 'text' && "Fini le texte statique. Aujourd'hui il réagit, il bouge, il vit. Chaque mot devient interactif, chaque phrase captive. C'est la nouvelle dimension du contenu."}
+                        {activeFeature === 'interaction' && "Un site interactif engage instantanément. Chaque geste compte, chaque clic révèle. L'utilisateur devient acteur. C'est la magie du web moderne."}
                     </p>
                 </div>
 
@@ -480,25 +488,27 @@ const InteractiveArrowDemo: React.FC<InteractiveArrowDemoProps> = ({
                             {/* Interaction pour l'onglet Interaction */}
                             {activeFeature === 'interaction' && (
                                 <div className="flex items-center justify-center w-full h-full p-8">
-                                    <div className="space-y-8 text-center max-w-lg">
-                                        <button className="px-8 py-4 bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-medium rounded-lg hover:scale-110 transition-transform duration-300 hover:shadow-2xl hover:shadow-primary-500/50">
-                                            Call-to-Action Premium
-                                        </button>
-                                        <div className="space-y-2">
-                                            <p className="text-sm text-gray-400">
-                                                Transformation au survol : scale 110%
-                                            </p>
-                                            <p className="text-sm text-gray-400">
-                                                Shadow dynamique avec couleur de marque
-                                            </p>
-                                            <p className="text-sm text-gray-400">
-                                                Transition fluide 300ms optimisée
-                                            </p>
+                                    <ScratchToReveal
+                                        width={320}
+                                        height={320}
+                                        minScratchPercentage={30}
+                                        gradientColors={["#0066CC", "#FF6B6B", "#FFD700"]}
+                                        onComplete={() => console.log("Révélation complète!")}
+                                    >
+                                        <div className="flex items-center justify-center w-full h-full bg-gradient-to-br from-primary-600 to-secondary-600 rounded-xl">
+                                            <div className="text-center p-8 text-white">
+                                                <h3 className="text-2xl font-bold mb-4">
+                                                    Surprise révélée !
+                                                </h3>
+                                                <p className="text-lg">
+                                                    Votre site devient une expérience tactile et ludique.
+                                                </p>
+                                                <p className="text-sm mt-4 text-gray-200">
+                                                    L'engagement par l'interaction
+                                                </p>
+                                            </div>
                                         </div>
-                                        <p className="text-base text-white font-medium">
-                                            +23% de conversions avec des CTA animés
-                                        </p>
-                                    </div>
+                                    </ScratchToReveal>
                                 </div>
                             )}
                             
