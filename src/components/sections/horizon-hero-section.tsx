@@ -528,6 +528,18 @@ export const Component = () => {
       const maxScroll = heroTotalHeight - windowHeight;
       const progress = Math.min(scrollY / maxScroll, 1);
       
+      // Cacher le canvas après avoir scrollé au-delà du Hero
+      if (canvasRef.current) {
+        const canvas = canvasRef.current;
+        if (scrollY > heroTotalHeight - windowHeight) {
+          canvas.style.opacity = '0';
+          canvas.style.pointerEvents = 'none';
+        } else {
+          canvas.style.opacity = '1';
+          canvas.style.pointerEvents = 'auto';
+        }
+      }
+      
       setScrollProgress(progress);
       const newSection = Math.floor(progress * totalSections);
       setCurrentSection(newSection);

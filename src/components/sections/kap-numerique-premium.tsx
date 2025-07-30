@@ -106,7 +106,7 @@ export default function KapNumeriquePremium() {
     <section 
       ref={sectionRef}
       className="relative min-h-screen bg-gradient-to-b from-gray-50 to-white overflow-hidden"
-      style={{ position: 'relative', zIndex: 10 }}
+      style={{ position: 'relative', zIndex: 20 }}
     >
       {/* Premium separation from hero */}
       <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-black to-transparent opacity-20" />
