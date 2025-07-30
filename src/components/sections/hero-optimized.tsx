@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic'
 import HeroPlaceholder from './hero-placeholder'
 
 // Dynamic import avec ssr: false pour éviter l'hydratation
-const HeroThreeJS = dynamic(() => import('./horizon-hero-section'), {
+const HeroThreeJS = dynamic(() => import('./horizon-hero-section').then(mod => mod.default), {
   ssr: false,
   loading: () => <HeroPlaceholder />
 })

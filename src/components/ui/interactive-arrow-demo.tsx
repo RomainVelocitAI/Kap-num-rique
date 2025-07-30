@@ -2,6 +2,15 @@
 
 import React, { useEffect, useRef, useCallback, useState } from 'react';
 import { Play } from 'lucide-react';
+import dynamic from 'next/dynamic';
+
+const FlipGallery = dynamic(
+  () => import('@/components/flip-gallery').then((mod) => mod.default || mod),
+  {
+    ssr: false,
+    loading: () => <div className="text-gray-500 text-center">Chargement des animations...</div>
+  }
+);
 
 // Helper to parse 'rgb(r, g, b)' or 'rgba(r, g, b, a)' string to {r, g, b}
 const parseRgbColor = (colorString: string | null): { r: number; g: number; b: number } | null => {
@@ -20,8 +29,6 @@ const parseRgbColor = (colorString: string | null): { r: number; g: number; b: n
 interface NavItem {
     id: string;
     label: string;
-    href?: string;
-    target?: string;
     onClick?: () => void;
 }
 
@@ -35,10 +42,10 @@ interface InteractiveArrowDemoProps {
 }
 
 const defaultNavItems: NavItem[] = [
-    { id: 'home', label: 'Accueil', onClick: () => console.info('Home clicked') },
-    { id: 'features', label: 'Fonctionnalités', href: '#features' },
-    { id: 'pricing', label: 'Tarifs', onClick: () => console.info('Pricing clicked') },
-    { id: 'contact', label: 'Contact', onClick: () => console.info('Contact clicked') },
+    { id: 'interactivity', label: 'Interactivité', onClick: () => console.info('Interactivité clicked') },
+    { id: 'animations', label: 'Animations', onClick: () => console.info('Animations clicked') },
+    { id: 'text', label: 'Texte', onClick: () => console.info('Texte clicked') },
+    { id: 'interaction', label: 'Interaction', onClick: () => console.info('Interaction clicked') },
 ];
 
 const InteractiveArrowDemo: React.FC<InteractiveArrowDemoProps> = ({
@@ -56,6 +63,8 @@ const InteractiveArrowDemo: React.FC<InteractiveArrowDemoProps> = ({
     const animationFrameIdRef = useRef<number | null>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
     const [showVideo, setShowVideo] = useState(false);
+    const [activeFeature, setActiveFeature] = useState('interactivity');
+    const containerRef = useRef<HTMLDivElement>(null);
 
     const resolvedCanvasColorsRef = useRef({
         strokeStyle: { r: 255, g: 215, b: 0 }, // Gold color for visibility
@@ -165,7 +174,15 @@ const InteractiveArrowDemo: React.FC<InteractiveArrowDemoProps> = ({
         };
 
         const handleMouseMove = (e: MouseEvent) => {
-            mousePosRef.current = { x: e.clientX, y: e.clientY };
+            if (containerRef.current && activeFeature === 'interactivity') {
+                const rect = containerRef.current.getBoundingClientRect();
+                if (e.clientX >= rect.left && e.clientX <= rect.right && 
+                    e.clientY >= rect.top && e.clientY <= rect.bottom) {
+                    mousePosRef.current = { x: e.clientX, y: e.clientY };
+                } else {
+                    mousePosRef.current = { x: null, y: null };
+                }
+            }
         };
 
         window.addEventListener("resize", updateCanvasSize);
@@ -189,7 +206,7 @@ const InteractiveArrowDemo: React.FC<InteractiveArrowDemoProps> = ({
                 cancelAnimationFrame(animationFrameIdRef.current);
             }
         };
-    }, [drawArrow]);
+    }, [drawArrow, activeFeature]);
 
     useEffect(() => {
         const videoElement = videoRef.current;
@@ -222,24 +239,25 @@ const InteractiveArrowDemo: React.FC<InteractiveArrowDemoProps> = ({
     };
 
     return (
-        <div className="relative bg-gray-900 text-white min-h-screen flex flex-col overflow-hidden">
+        <div ref={containerRef} className="relative bg-gray-900 text-white min-h-screen flex flex-col overflow-hidden">
             <nav className="w-full max-w-screen-md mx-auto flex flex-wrap justify-center sm:justify-between items-center px-4 sm:px-8 py-4 text-sm z-20 relative">
                 {navItems.map((item) => {
-                    const commonProps = {
-                        key: item.id,
-                        className: "py-2 px-3 sm:px-4 rounded-md text-gray-300 hover:text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors duration-150 ease-in-out whitespace-nowrap",
-                        onClick: item.onClick,
-                    };
-                    if (item.href) {
-                        return (
-                            <a href={item.href} target={item.target} rel={item.target === '_blank' ? 'noopener noreferrer' : undefined} {...commonProps}>
-                                {item.label}
-                            </a>
-                        );
-                    }
+                    const { id, label, onClick } = item;
                     return (
-                        <button type="button" {...commonProps}>
-                            {item.label}
+                        <button
+                            key={id}
+                            type="button"
+                            onClick={() => {
+                                setActiveFeature(id);
+                                onClick?.();
+                            }}
+                            className={`py-2 px-3 sm:px-4 rounded-md transition-all duration-300 ease-in-out whitespace-nowrap ${
+                                activeFeature === id
+                                    ? 'bg-gradient-to-r from-primary-500 to-secondary-500 text-white shadow-lg'
+                                    : 'text-gray-300 hover:text-white hover:bg-white/10'
+                            } focus:outline-none focus:ring-2 focus:ring-primary-500`}
+                        >
+                            {label}
                         </button>
                     );
                 })}
@@ -248,10 +266,16 @@ const InteractiveArrowDemo: React.FC<InteractiveArrowDemoProps> = ({
             <main className="flex-grow flex flex-col items-center justify-center z-20 relative">
                 <div className="mt-12 sm:mt-16 lg:mt-24 flex flex-col items-center">
                     <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center px-4 bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent">
-                        {heading}
+                        {activeFeature === 'interactivity' && "Captez l'attention instantanément"}
+                        {activeFeature === 'animations' && "Des animations qui captivent"}
+                        {activeFeature === 'text' && "Du texte qui prend vie"}
+                        {activeFeature === 'interaction' && "Des interactions mémorables"}
                     </h1>
                     <p className="mt-3 block text-gray-300 text-center text-base sm:text-lg px-4 max-w-xl">
-                        {tagline}
+                        {activeFeature === 'interactivity' && "Suivez le mouvement naturel de vos visiteurs avec des interactions fluides"}
+                        {activeFeature === 'animations' && "Créez des expériences visuelles mémorables avec des transitions élégantes"}
+                        {activeFeature === 'text' && "Typographie dynamique et effets de texte qui racontent votre histoire"}
+                        {activeFeature === 'interaction' && "Engagez vos utilisateurs avec des éléments interactifs innovants"}
                     </p>
                 </div>
 
@@ -264,10 +288,11 @@ const InteractiveArrowDemo: React.FC<InteractiveArrowDemoProps> = ({
                     </button>
                 </div>
 
-                <div className="mt-12 lg:mt-16 w-full max-w-screen-sm mx-auto overflow-hidden px-4 sm:px-2">
+                <div className="mt-12 lg:mt-16 w-full max-w-screen-lg mx-auto overflow-hidden px-4 sm:px-2">
                     <div className="bg-gray-800 rounded-[2rem] p-[0.25rem]">
-                        <div className="relative h-64 sm:h-72 md:h-80 lg:h-96 rounded-[1.75rem] bg-gray-900 flex items-center justify-center overflow-hidden">
-                            {imageUrl && (
+                        <div className="relative h-[500px] sm:h-[600px] md:h-[700px] lg:h-[800px] rounded-[1.75rem] bg-gray-900 flex items-center justify-center overflow-hidden">
+                            {/* Contenu conditionnel selon la fonctionnalité active */}
+                            {activeFeature === 'interactivity' && imageUrl && (
                                 <img
                                     src={imageUrl}
                                     alt="Démonstration interactive"
@@ -296,7 +321,38 @@ const InteractiveArrowDemo: React.FC<InteractiveArrowDemoProps> = ({
                                     <Play className="w-4 h-4 sm:w-5 sm:h-6" />
                                 </button>
                             )}
-                            {!imageUrl && !videoUrl && (
+                            
+                            {/* Animation pour l'onglet Animations */}
+                            {activeFeature === 'animations' && (
+                                <div className="w-full h-full flex items-center justify-center p-6">
+                                    <FlipGallery />
+                                </div>
+                            )}
+                            
+                            {/* Texte animé pour l'onglet Texte */}
+                            {activeFeature === 'text' && (
+                                <div className="flex items-center justify-center w-full h-full p-8">
+                                    <div className="space-y-4 text-center">
+                                        <h3 className="text-4xl font-bold bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent animate-gradient">
+                                            Texte Dynamique
+                                        </h3>
+                                        <p className="text-gray-300 animate-fade-in-up">
+                                            Typographie qui captive et communique
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
+                            
+                            {/* Interaction pour l'onglet Interaction */}
+                            {activeFeature === 'interaction' && (
+                                <div className="flex items-center justify-center w-full h-full">
+                                    <button className="px-8 py-4 bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-medium rounded-lg hover:scale-110 transition-transform duration-300 hover:shadow-2xl hover:shadow-primary-500/50">
+                                        Cliquez-moi !
+                                    </button>
+                                </div>
+                            )}
+                            
+                            {!imageUrl && !videoUrl && activeFeature === 'interactivity' && (
                                 <div className="text-gray-500 italic">Zone de contenu interactif</div>
                             )}
                         </div>
@@ -304,7 +360,12 @@ const InteractiveArrowDemo: React.FC<InteractiveArrowDemoProps> = ({
                 </div>
             </main>
             <div className="h-12 sm:h-16 md:h-24"></div>
-            <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-30"></canvas>
+            <canvas 
+                ref={canvasRef} 
+                className={`fixed inset-0 pointer-events-none z-30 transition-opacity duration-300 ${
+                    activeFeature === 'interactivity' ? 'opacity-100' : 'opacity-0'
+                }`}
+            ></canvas>
             
             {/* Background decorative elements */}
             <div className="absolute inset-0 z-0">

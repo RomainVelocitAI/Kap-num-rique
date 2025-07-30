@@ -73,18 +73,18 @@ export default function KapNumeriquePremium() {
         }
       })
 
-      // Timeline dots animation
-      gsap.from('.timeline-dot', {
-        scale: 0,
-        opacity: 0,
-        duration: 0.5,
-        stagger: 0.1,
-        ease: 'back.out(2)',
-        scrollTrigger: {
-          trigger: '.timeline-container',
-          start: 'top 70%'
-        }
-      })
+      // Timeline dots animation - commented out as elements don't exist
+      // gsap.from('.timeline-dot', {
+      //   scale: 0,
+      //   opacity: 0,
+      //   duration: 0.5,
+      //   stagger: 0.1,
+      //   ease: 'back.out(2)',
+      //   scrollTrigger: {
+      //     trigger: '.timeline-container',
+      //     start: 'top 70%'
+      //   }
+      // })
     }, sectionRef)
 
     return () => ctx.revert()

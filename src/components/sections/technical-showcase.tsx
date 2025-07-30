@@ -147,7 +147,17 @@ const useRealMetrics = () => {
           }
         }));
       })
-      .catch(() => {});
+      .catch(err => {
+        // Erreur CORS attendue en développement local
+        console.log('Géolocalisation non disponible en développement local');
+        setMetrics(prev => ({
+          ...prev,
+          userLocation: {
+            city: 'La Réunion',
+            region: '974'
+          }
+        }));
+      });
 
     // Latence
     const measureLatency = async () => {

@@ -33,7 +33,7 @@ const HeroStatic = () => (
 
 // Import dynamique du composant Three.js
 const HeroThreeJS = dynamic(
-  () => import('./horizon-hero-section'),
+  () => import('./horizon-hero-section').then(mod => mod.default),
   { 
     ssr: false,
     loading: () => <HeroStatic />
