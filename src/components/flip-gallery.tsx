@@ -42,6 +42,7 @@ export default function FlipGallery() {
   const containerRef = useRef<HTMLDivElement>(null);
   const uniteRef = useRef<HTMLElement[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   // initialise first image once and preload all images
   useEffect(() => {
@@ -74,9 +75,32 @@ export default function FlipGallery() {
     gallery.style.setProperty('--title-opacity', '1');
   };
 
-  const updateGallery = (nextIndex: number, isReverse = false) => {
+  const updateGallery = async (nextIndex: number, isReverse = false) => {
     const gallery = containerRef.current;
-    if (!gallery) return;
+    if (!gallery || isAnimating) return;
+    
+    setIsAnimating(true);
+
+    // Précharger l'image suivante AVANT de lancer l'animation
+    const nextImage = new Image();
+    nextImage.src = images[nextIndex].url;
+    
+    // Attendre que l'image soit chargée
+    await new Promise((resolve) => {
+      if (nextImage.complete) {
+        resolve(true);
+      } else {
+        nextImage.onload = () => resolve(true);
+      }
+    });
+
+    // Mettre à jour les overlay avec la nouvelle image AVANT l'animation
+    const overlayTop = gallery.querySelector('.overlay-top') as HTMLElement;
+    const overlayBottom = gallery.querySelector('.overlay-bottom') as HTMLElement;
+    if (overlayTop && overlayBottom) {
+      overlayTop.style.backgroundImage = `url('${images[nextIndex].url}')`;
+      overlayBottom.style.backgroundImage = `url('${images[nextIndex].url}')`;
+    }
 
     // determine direction animation arrays
     const topAnim = isReverse ? flipAnimationTopReverse : flipAnimationTop;
@@ -84,26 +108,24 @@ export default function FlipGallery() {
       ? flipAnimationBottomReverse
       : flipAnimationBottom;
 
-    gallery.querySelector('.overlay-top')?.animate(topAnim, flipTiming);
-    gallery.querySelector('.overlay-bottom')?.animate(bottomAnim, flipTiming);
+    // Lancer l'animation
+    overlayTop?.animate(topAnim, flipTiming);
+    overlayBottom?.animate(bottomAnim, flipTiming);
 
     // hide title
     gallery.style.setProperty('--title-y', '-1rem');
     gallery.style.setProperty('--title-opacity', '0');
     gallery.setAttribute('data-title', '');
 
-    // update images with slight delay so animation looks continuous
-    uniteRef.current.forEach((el, idx) => {
-      const delay =
-        (isReverse && (idx !== 1 && idx !== 2)) ||
-        (!isReverse && (idx === 1 || idx === 2))
-          ? FLIP_SPEED - 150 // Réduit de 200ms à 150ms
-          : 0;
-
-      setTimeout(() => {
-        el.style.backgroundImage = `url('${images[nextIndex].url}')`;
-      }, delay);
-    });
+    // Mettre à jour les éléments de base immédiatement après le début de l'animation
+    setTimeout(() => {
+      const topEl = gallery.querySelector('.top') as HTMLElement;
+      const bottomEl = gallery.querySelector('.bottom') as HTMLElement;
+      if (topEl && bottomEl) {
+        topEl.style.backgroundImage = `url('${images[nextIndex].url}')`;
+        bottomEl.style.backgroundImage = `url('${images[nextIndex].url}')`;
+      }
+    }, FLIP_SPEED / 2);
 
     // reveal new title roughly half‑way through animation
     setTimeout(() => {
@@ -113,6 +135,11 @@ export default function FlipGallery() {
       gallery.style.setProperty('--title-y', '0');
       gallery.style.setProperty('--title-opacity', '1');
     }, FLIP_SPEED * 0.5);
+    
+    // Réactiver les boutons après l'animation
+    setTimeout(() => {
+      setIsAnimating(false);
+    }, FLIP_SPEED);
   };
 
   const updateIndex = (increment: number) => {
@@ -148,7 +175,8 @@ export default function FlipGallery() {
             type='button'
             onClick={() => updateIndex(-1)}
             title='Previous'
-            className='text-white opacity-75 hover:opacity-100 hover:scale-125 transition'
+            disabled={isAnimating}
+            className={`text-white transition ${isAnimating ? 'opacity-30 cursor-not-allowed' : 'opacity-75 hover:opacity-100 hover:scale-125'}`}
           >
             <ChevronLeft size={20} />
           </button>
@@ -156,7 +184,8 @@ export default function FlipGallery() {
             type='button'
             onClick={() => updateIndex(1)}
             title='Next'
-            className='text-white opacity-75 hover:opacity-100 hover:scale-125 transition'
+            disabled={isAnimating}
+            className={`text-white transition ${isAnimating ? 'opacity-30 cursor-not-allowed' : 'opacity-75 hover:opacity-100 hover:scale-125'}`}
           >
             <ChevronRight size={20} />
           </button>
