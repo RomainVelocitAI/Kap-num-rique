@@ -27,14 +27,14 @@ export default function HeroPlaceholder() {
 
       {/* Contenu principal */}
       <div className="hero-content relative z-10">
-        <motion.h1 
+        <motion.div 
           className="hero-title text-[#DC143C]"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
           CAPTIVEZ
-        </motion.h1>
+        </motion.div>
         
         <motion.div 
           className="hero-subtitle text-white"
