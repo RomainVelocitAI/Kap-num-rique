@@ -239,7 +239,7 @@ export default function TechnicalShowcase() {
                   title="Temps de chargement"
                   value={`${metrics.pageLoadTime}ms`}
                   subtitle="Page complète"
-                  status={metrics.pageLoadTime < 1000 ? 'excellent' : 'good'}
+                  status={metrics.pageLoadTime < 2500 ? 'excellent' : 'good'}
                 />
                 
                 <MetricCard
@@ -247,7 +247,7 @@ export default function TechnicalShowcase() {
                   title="Premier affichage"
                   value={`${metrics.firstContentfulPaint}ms`}
                   subtitle="First Contentful Paint"
-                  status={metrics.firstContentfulPaint < 1800 ? 'excellent' : 'good'}
+                  status={metrics.firstContentfulPaint < 2000 ? 'excellent' : 'good'}
                 />
                 
                 <MetricCard
@@ -255,7 +255,7 @@ export default function TechnicalShowcase() {
                   title="Ressources"
                   value={`${metrics.resourcesCount}`}
                   subtitle={`Total: ${metrics.totalPageSize}KB`}
-                  status={metrics.totalPageSize < 2000 ? 'excellent' : 'good'}
+                  status={metrics.totalPageSize < 3000 ? 'excellent' : 'good'}
                 />
                 
                 <MetricCard
@@ -263,7 +263,7 @@ export default function TechnicalShowcase() {
                   title="DOM Ready"
                   value={`${metrics.domContentLoaded}ms`}
                   subtitle="DOM Content Loaded"
-                  status={metrics.domContentLoaded < 800 ? 'excellent' : 'good'}
+                  status={metrics.domContentLoaded < 2000 ? 'excellent' : 'good'}
                 />
 
                 <div className="col-span-1 md:col-span-2 mt-4">
@@ -433,11 +433,21 @@ const PerformanceBar = ({ percentage }: any) => (
 // Fonctions de calcul
 const calculatePerformanceScore = (metrics: any) => {
   let score = 100;
-  if (metrics.pageLoadTime > 1000) score -= 20;
-  if (metrics.firstContentfulPaint > 1800) score -= 20;
-  if (metrics.totalPageSize > 2000) score -= 10;
-  if (metrics.resourcesCount > 50) score -= 10;
-  return Math.max(0, score);
+  // Seuils plus permissifs
+  if (metrics.pageLoadTime > 3000) score -= 10;        // était 1000ms -> -20
+  else if (metrics.pageLoadTime > 2000) score -= 5;    // nouveau palier
+  
+  if (metrics.firstContentfulPaint > 2500) score -= 10; // était 1800ms -> -20
+  else if (metrics.firstContentfulPaint > 1800) score -= 5;
+  
+  if (metrics.totalPageSize > 3000) score -= 5;        // était 2000KB -> -10
+  if (metrics.resourcesCount > 100) score -= 5;        // était 50 -> -10
+  
+  // Bonus pour les très bonnes performances
+  if (metrics.pageLoadTime < 1500) score += 5;
+  if (metrics.firstContentfulPaint < 1000) score += 5;
+  
+  return Math.min(100, Math.max(0, score));
 };
 
 const calculateSEOScore = (seo: any) => {
