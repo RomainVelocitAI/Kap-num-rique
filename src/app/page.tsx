@@ -1,10 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Header from '@/components/layout/Header'
-import { Component as HeroSection } from '@/components/sections/horizon-hero-section'
-import KapNumeriquePremium from '@/components/sections/kap-numerique-premium'
-import TechnicalShowcase from '@/components/sections/technical-showcase'
+import Header from '../components/layout/Header'
+import { Component as HeroSection } from '../components/sections/horizon-hero-section'
+import KapNumeriquePremium from '../components/sections/kap-numerique-premium'
+import TechnicalShowcase from '../components/sections/technical-showcase'
 
 export default function Home() {
   const [showHeader, setShowHeader] = useState(false)

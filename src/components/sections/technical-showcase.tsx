@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ContainerScroll } from "@/components/ui/container-scroll";
+import { ContainerScroll } from "../ui/container-scroll";
 import { motion } from "framer-motion";
 
 // Hook pour les métriques live
