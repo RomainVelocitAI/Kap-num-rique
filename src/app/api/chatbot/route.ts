@@ -208,15 +208,28 @@ async function saveConversation(
       MessageCount: conversationData.messages.length,
     };
 
+    console.log('Saving conversation:', {
+      sessionId,
+      recordId,
+      messageCount: conversationData.messages.length,
+      hasRecordId: !!recordId
+    });
+
     if (recordId) {
       // Mettre à jour l'enregistrement existant
       await base('Conversations').update(recordId, fields);
+      console.log('Updated existing conversation record:', recordId);
     } else {
       // Créer un nouvel enregistrement
-      await base('Conversations').create([{ fields }]);
+      const result = await base('Conversations').create([{ fields }]);
+      console.log('Created new conversation record:', result[0].id);
     }
   } catch (error) {
     console.error('Error saving conversation:', error);
+    console.error('Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined
+    });
     // Ne pas propager l'erreur pour ne pas bloquer la réponse
   }
 }
@@ -235,6 +248,11 @@ export async function POST(request: NextRequest) {
 
     // Gérer la session avec cookies
     const session = getOrCreateSession(request, null);
+    console.log('Session info:', {
+      sessionId: session.sessionId,
+      consentGiven: session.consentGiven,
+      consentFromRequest: consentGiven
+    });
     
     // Si pas de consentement, demander le consentement
     if (!session.consentGiven && !consentGiven) {
@@ -248,7 +266,7 @@ export async function POST(request: NextRequest) {
     // Si consentement donné, mettre à jour la session
     if (consentGiven && !session.consentGiven) {
       session.consentGiven = true;
-      saveSession(session, request, null);
+      // La session sera sauvegardée dans le cookie avec la réponse
     }
 
     // Récupérer la conversation existante
@@ -311,15 +329,13 @@ export async function POST(request: NextRequest) {
     const nextResponse = NextResponse.json(result);
     
     // Sauvegarder la session dans le cookie
-    if (session.consentGiven) {
-      nextResponse.cookies.set('kap_numerique_session', JSON.stringify(session), {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge: 30 * 24 * 60 * 60, // 30 jours
-        path: '/',
-      });
-    }
+    nextResponse.cookies.set('kap_numerique_session', JSON.stringify(session), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 30 * 24 * 60 * 60, // 30 jours
+      path: '/',
+    });
 
     return nextResponse;
   } catch (error) {

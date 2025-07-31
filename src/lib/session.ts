@@ -1,5 +1,5 @@
-import { getCookie, setCookie } from 'cookies-next';
 import { v4 as uuidv4 } from 'uuid';
+import { cookies } from 'next/headers';
 
 const COOKIE_NAME = 'kap_numerique_session';
 const COOKIE_MAX_AGE = 30 * 24 * 60 * 60; // 30 jours en secondes
@@ -11,18 +11,20 @@ export interface SessionData {
 }
 
 export function getOrCreateSession(req?: any, res?: any): SessionData {
-  // Essayer de récupérer la session existante
-  const existingSession = getCookie(COOKIE_NAME, { req, res });
+  // Utiliser l'API cookies de Next.js
+  const cookieStore = cookies();
+  const existingSession = cookieStore.get(COOKIE_NAME);
   
-  if (existingSession && typeof existingSession === 'string') {
+  if (existingSession?.value) {
     try {
-      const sessionData = JSON.parse(existingSession);
+      const sessionData = JSON.parse(existingSession.value);
       // Vérifier que la session a les bonnes propriétés
       if (sessionData.sessionId && sessionData.createdAt) {
         return sessionData;
       }
     } catch (e) {
       // Session corrompue, on en crée une nouvelle
+      console.error('Invalid session cookie:', e);
     }
   }
 
@@ -37,29 +39,16 @@ export function getOrCreateSession(req?: any, res?: any): SessionData {
 }
 
 export function saveSession(sessionData: SessionData, req?: any, res?: any): void {
-  setCookie(COOKIE_NAME, JSON.stringify(sessionData), {
-    req,
-    res,
-    maxAge: COOKIE_MAX_AGE,
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-  });
+  // Cette fonction sera utilisée différemment dans l'API route
+  // Les cookies seront définis via NextResponse
 }
 
 export function clearSession(req?: any, res?: any): void {
-  setCookie(COOKIE_NAME, '', {
-    req,
-    res,
-    maxAge: 0,
-    path: '/',
-  });
+  // Cette fonction sera utilisée différemment dans l'API route
 }
 
 export function updateSessionConsent(consent: boolean, req?: any, res?: any): SessionData {
   const session = getOrCreateSession(req, res);
   session.consentGiven = consent;
-  saveSession(session, req, res);
   return session;
 }

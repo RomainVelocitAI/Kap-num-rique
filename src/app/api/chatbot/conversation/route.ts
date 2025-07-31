@@ -30,12 +30,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Find the last conversation for this session and update its rating
+    // Find the conversation for this session and update its rating
     const records = await base('Conversations')
       .select({
         filterByFormula: `{SessionID} = '${sessionId}'`,
         maxRecords: 1,
-        sort: [{ field: 'Timestamp', direction: 'desc' }],
       })
       .firstPage();
 
@@ -80,22 +79,28 @@ export async function GET(request: NextRequest) {
     const records = await base('Conversations')
       .select({
         filterByFormula: `{SessionID} = '${sessionId}'`,
-        sort: [{ field: 'Timestamp', direction: 'asc' }],
-        fields: ['MessageID', 'UserMessage', 'BotResponse', 'Timestamp', 'Satisfaction'],
+        maxRecords: 1,
+        fields: ['SessionID', 'Messages', 'Metadata', 'Satisfaction'],
       })
-      .all();
+      .firstPage();
 
-    const conversations = records.map((record) => ({
-      messageId: record.get('MessageID'),
-      userMessage: record.get('UserMessage'),
-      botResponse: record.get('BotResponse'),
-      timestamp: record.get('Timestamp'),
-      satisfaction: record.get('Satisfaction'),
-    }));
+    if (records.length === 0) {
+      return NextResponse.json({
+        sessionId,
+        messages: [],
+        metadata: null,
+      });
+    }
+
+    const record = records[0];
+    const messagesField = record.get('Messages');
+    const metadataField = record.get('Metadata');
 
     return NextResponse.json({
       sessionId,
-      conversations,
+      messages: messagesField ? JSON.parse(messagesField as string) : [],
+      metadata: metadataField ? JSON.parse(metadataField as string) : null,
+      satisfaction: record.get('Satisfaction'),
     });
   } catch (error) {
     console.error('Conversation history API error:', error);
