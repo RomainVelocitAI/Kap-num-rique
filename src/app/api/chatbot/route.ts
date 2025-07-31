@@ -234,16 +234,49 @@ async function saveConversation(
 - Début: ${startTime}
 - Dernière activité: ${lastActivity}`;
 
-    const fields = {
+    // Champs de base toujours présents
+    const fields: any = {
       SessionID: sessionId,
-      Messages: JSON.stringify(conversationData.messages), // Garder le JSON pour l'API
-      FormattedConversation: formattedConversation, // Version formatée pour lecture
-      ConversationSummary: conversationSummary,
-      ConversationStats: conversationStats,
+      Messages: JSON.stringify(conversationData.messages, null, 2), // JSON formaté avec indentation
       Metadata: JSON.stringify(conversationData.metadata),
       LastActivity: new Date().toISOString(),
       MessageCount: conversationData.messages.length,
     };
+
+    // Ajouter les champs formatés seulement s'ils sont supportés
+    // Pour l'instant, on les commente jusqu'à ce qu'ils soient créés dans Airtable
+    // fields.FormattedConversation = formattedConversation;
+    // fields.ConversationSummary = conversationSummary;
+    // fields.ConversationStats = conversationStats;
+
+    // Alternative: stocker les informations formatées dans le champ Metadata
+    const enrichedMetadata = {
+      ...conversationData.metadata,
+      formattedSummary: conversationSummary,
+      stats: {
+        userMessages,
+        botMessages,
+        startTimeFormatted: startTime,
+        lastActivityFormatted: lastActivity
+      }
+    };
+    fields.Metadata = JSON.stringify(enrichedMetadata, null, 2);
+    
+    // Stocker aussi une version texte simple dans UserMessage et BotResponse
+    // On utilise les champs existants pour stocker un résumé formaté
+    if (conversationData.messages.length > 0) {
+      // Prendre le dernier échange
+      const lastExchange = conversationData.messages.slice(-2);
+      const lastUserMsg = lastExchange.find(m => m.type === 'user');
+      const lastBotMsg = lastExchange.find(m => m.type === 'bot');
+      
+      if (lastUserMsg) {
+        fields.UserMessage = `[${new Date(lastUserMsg.timestamp).toLocaleString('fr-FR')}]\n${lastUserMsg.content}`;
+      }
+      if (lastBotMsg) {
+        fields.BotResponse = `[${new Date(lastBotMsg.timestamp).toLocaleString('fr-FR')}]\n${lastBotMsg.content}`;
+      }
+    }
 
     console.log('Saving conversation:', {
       sessionId,
