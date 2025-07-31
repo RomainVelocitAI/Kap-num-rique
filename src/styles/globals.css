@@ -103,6 +103,25 @@
   canvas {
     touch-action: none;
   }
+  
+  /* Allow vertical scrolling on hero canvas for mobile */
+  .hero-canvas {
+    touch-action: pan-y !important;
+  }
+  
+  /* Mobile optimizations for hero */
+  @media (max-width: 768px) {
+    .hero-canvas {
+      touch-action: pan-y !important;
+      pointer-events: none !important;
+    }
+    
+    .hero-container {
+      /* Ensure smooth scrolling on mobile */
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+    }
+  }
 
   /* Smooth scroll */
   html {
@@ -310,6 +329,35 @@
   .content-section .hero-subtitle {
     position: relative;
     z-index: 10;
+  }
+  
+  /* Mobile optimizations for hero content */
+  @media (max-width: 768px) {
+    .side-menu {
+      display: none; /* Hide side menu on mobile */
+    }
+    
+    .hero-title {
+      font-size: clamp(50px, 15vw, 100px); /* Smaller on mobile */
+    }
+    
+    .hero-subtitle {
+      font-size: clamp(14px, 3vw, 20px); /* Smaller on mobile */
+      padding: 0 20px; /* Add padding for readability */
+    }
+    
+    .scroll-progress {
+      bottom: 20px;
+      right: 20px;
+    }
+    
+    .progress-track {
+      width: 60px; /* Smaller progress bar on mobile */
+    }
+    
+    .content-section {
+      padding: 20px; /* Add padding for mobile */
+    }
   }
 
   /* Cosmos specific styles */

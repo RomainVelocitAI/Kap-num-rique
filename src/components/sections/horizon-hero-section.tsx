@@ -55,6 +55,26 @@ const HorizonHeroSection = () => {
   });
 
   const [heroHeight, setHeroHeight] = useState(300); // 300vh par défaut
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                     window.innerWidth <= 768 ||
+                     ('ontouchstart' in window);
+      setIsMobile(mobile);
+      
+      // Adjust hero height for mobile
+      if (mobile) {
+        setHeroHeight(200); // Reduced height for mobile
+      }
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Initialize Three.js
   useEffect(() => {
@@ -566,7 +586,8 @@ const HorizonHeroSection = () => {
           canvas.style.pointerEvents = 'none';
         } else {
           canvas.style.opacity = '1';
-          canvas.style.pointerEvents = 'auto';
+          // Never enable pointer events on mobile to allow natural scrolling
+          canvas.style.pointerEvents = isMobile ? 'none' : 'auto';
         }
       }
       
@@ -629,7 +650,7 @@ const HorizonHeroSection = () => {
     handleScroll(); // Set initial position
     
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [totalSections, heroHeight]);
+  }, [totalSections, heroHeight, isMobile]);
 
 
 
