@@ -38,6 +38,12 @@ export const metadata: Metadata = {
   keywords: ['kap numérique', 'développement web', 'la réunion', 'site internet', 'aide numérique', 'transformation digitale'],
   authors: [{ name: 'Kap Numérique' }],
   creator: 'Kap Numérique',
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+  },
   openGraph: {
     type: 'website',
     locale: 'fr_FR',

@@ -352,4 +352,50 @@
     animation: marquee-vertical var(--duration) linear infinite;
   }
 
+  /* Chatbot mobile optimizations */
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
+  
+  /* Webkit-specific scrolling for iOS */
+  .-webkit-overflow-scrolling-touch {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Prevent iOS zoom on input focus */
+  @supports (-webkit-touch-callout: none) {
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="number"],
+    textarea {
+      font-size: 16px !important;
+    }
+  }
+  
+  /* Ensure minimum touch target size */
+  button,
+  a,
+  [role="button"] {
+    position: relative;
+  }
+  
+  button::before,
+  a::before,
+  [role="button"]::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 44px;
+    min-height: 44px;
+    pointer-events: none;
+  }
+
+  /* Improve scrolling performance on mobile */
+  .overscroll-contain {
+    overscroll-behavior: contain;
+  }
+
 }

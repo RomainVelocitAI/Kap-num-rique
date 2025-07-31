@@ -22,25 +22,25 @@ function ConsentBanner({ onAccept, onDecline }: ConsentBannerProps) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="mx-4 mb-2 bg-yellow-50 border border-yellow-200 rounded-lg p-3"
+      className="mx-3 md:mx-4 mb-2 bg-yellow-50 border border-yellow-200 rounded-lg p-3"
     >
       <div className="flex items-start gap-2">
-        <Cookie className="w-5 h-5 text-yellow-600 mt-0.5" />
+        <Cookie className="w-5 h-5 text-yellow-600 mt-0.5 flex-shrink-0" />
         <div className="flex-1">
-          <p className="text-sm text-gray-700 mb-2">
+          <p className="text-xs md:text-sm text-gray-700 mb-2">
             Pour améliorer votre expérience, ce chatbot utilise un cookie pour mémoriser notre conversation. 
             Aucune donnée personnelle n'est collectée.
           </p>
           <div className="flex gap-2">
             <button
               onClick={onAccept}
-              className="px-3 py-1.5 bg-primary text-white rounded-md text-sm hover:bg-primary/90 transition-colors"
+              className="px-3 py-2 md:py-1.5 bg-primary text-white rounded-md text-sm hover:bg-primary/90 transition-colors touch-manipulation active:scale-95"
             >
               J'accepte
             </button>
             <button
               onClick={onDecline}
-              className="px-3 py-1.5 bg-gray-200 text-gray-700 rounded-md text-sm hover:bg-gray-300 transition-colors"
+              className="px-3 py-2 md:py-1.5 bg-gray-200 text-gray-700 rounded-md text-sm hover:bg-gray-300 transition-colors touch-manipulation active:scale-95"
             >
               Je refuse
             </button>
@@ -75,6 +75,7 @@ const AiChatbot = () => {
   const [consentGiven, setConsentGiven] = useState(false)
   const [pendingMessage, setPendingMessage] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
   const [feedback, setFeedback] = useState<{ [key: string]: 'up' | 'down' | null }>({})
 
   const scrollToBottom = () => {
@@ -84,6 +85,24 @@ const AiChatbot = () => {
   useEffect(() => {
     scrollToBottom()
   }, [messages])
+
+  // Handle mobile keyboard visibility
+  useEffect(() => {
+    const handleFocus = () => {
+      // On mobile, ensure the input is visible when keyboard appears
+      if (window.innerWidth < 768 && inputRef.current) {
+        setTimeout(() => {
+          inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }, 300)
+      }
+    }
+
+    const input = inputRef.current
+    if (input) {
+      input.addEventListener('focus', handleFocus)
+      return () => input.removeEventListener('focus', handleFocus)
+    }
+  }, [])
 
   const handleSend = async (messageText?: string) => {
     const textToSend = messageText || inputValue.trim()
@@ -234,9 +253,9 @@ const AiChatbot = () => {
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col h-[600px]">
+    <div className="bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col h-[600px] md:h-[600px] max-h-[80vh]">
       {/* Header */}
-      <div className="bg-primary text-white p-4 flex items-center justify-between">
+      <div className="bg-primary text-white p-3 md:p-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
             <Bot className="w-6 h-6" />
@@ -248,10 +267,10 @@ const AiChatbot = () => {
         </div>
         <button
           onClick={resetChat}
-          className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+          className="p-2 hover:bg-white/10 rounded-lg transition-colors touch-manipulation"
           title="Nouvelle conversation"
         >
-          <RotateCw className="w-4 h-4" />
+          <RotateCw className="w-4 h-4 md:w-4 md:h-4" />
         </button>
       </div>
 
@@ -264,7 +283,7 @@ const AiChatbot = () => {
       )}
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-3 md:space-y-4 overscroll-contain -webkit-overflow-scrolling-touch">
         <AnimatePresence>
           {messages.map((message) => (
             <motion.div
@@ -280,7 +299,7 @@ const AiChatbot = () => {
                 </div>
               )}
               
-              <div className={`max-w-[80%] ${message.sender === 'user' ? 'order-1' : 'order-2'}`}>
+              <div className={`max-w-[90%] sm:max-w-[85%] md:max-w-[80%] ${message.sender === 'user' ? 'order-1' : 'order-2'}`}>
                 <div
                   className={`p-3 rounded-2xl ${
                     message.sender === 'user'
@@ -288,30 +307,30 @@ const AiChatbot = () => {
                       : 'bg-gray-100 text-gray-800 rounded-bl-sm'
                   }`}
                 >
-                  <p className="text-sm whitespace-pre-wrap">{message.text}</p>
+                  <p className="text-sm whitespace-pre-wrap break-words">{message.text}</p>
                 </div>
                 
                 {message.sender === 'bot' && message.id !== '1' && (
                   <div className="flex items-center gap-2 mt-1 px-2">
                     <button
                       onClick={() => handleFeedback(message.id, 'up')}
-                      className={`p-1 rounded transition-colors ${
+                      className={`p-1.5 md:p-1 rounded transition-colors touch-manipulation ${
                         feedback[message.id] === 'up'
                           ? 'text-green-600 bg-green-50'
                           : 'text-gray-400 hover:text-gray-600'
                       }`}
                     >
-                      <ThumbsUp className="w-3 h-3" />
+                      <ThumbsUp className="w-3.5 h-3.5 md:w-3 md:h-3" />
                     </button>
                     <button
                       onClick={() => handleFeedback(message.id, 'down')}
-                      className={`p-1 rounded transition-colors ${
+                      className={`p-1.5 md:p-1 rounded transition-colors touch-manipulation ${
                         feedback[message.id] === 'down'
                           ? 'text-red-600 bg-red-50'
                           : 'text-gray-400 hover:text-gray-600'
                       }`}
                     >
-                      <ThumbsDown className="w-3 h-3" />
+                      <ThumbsDown className="w-3.5 h-3.5 md:w-3 md:h-3" />
                     </button>
                     <span className="text-xs text-gray-400">
                       {new Date(message.timestamp).toLocaleTimeString('fr-FR', {
@@ -368,14 +387,14 @@ const AiChatbot = () => {
 
       {/* Suggested Questions */}
       {messages.length === 1 && !showConsent && (
-        <div className="px-4 pb-2">
+        <div className="px-3 md:px-4 pb-2">
           <p className="text-xs text-gray-500 mb-2">Questions fréquentes :</p>
           <div className="flex flex-wrap gap-2">
             {suggestedQuestions.map((question, index) => (
               <button
                 key={index}
                 onClick={() => handleSuggestedQuestion(question)}
-                className="text-xs px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
+                className="text-xs px-3 py-2 md:py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors touch-manipulation active:bg-gray-300"
               >
                 {question}
               </button>
@@ -386,16 +405,16 @@ const AiChatbot = () => {
 
       {/* Error Message */}
       {error && (
-        <div className="px-4 pb-2">
+        <div className="px-3 md:px-4 pb-2">
           <div className="flex items-center gap-2 p-2 bg-red-50 text-red-600 rounded-lg text-xs">
-            <AlertCircle className="w-4 h-4" />
+            <AlertCircle className="w-4 h-4 flex-shrink-0" />
             <span>{error}</span>
           </div>
         </div>
       )}
 
       {/* Input */}
-      <div className="p-4 border-t border-gray-100">
+      <div className="p-3 md:p-4 border-t border-gray-100">
         <form
           onSubmit={(e) => {
             e.preventDefault()
@@ -404,19 +423,25 @@ const AiChatbot = () => {
           className="flex gap-2"
         >
           <input
+            ref={inputRef}
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             placeholder="Tapez votre message..."
             disabled={isTyping || showConsent}
-            className="flex-1 px-4 py-2 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 px-4 py-3 md:py-2 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all disabled:opacity-50 disabled:cursor-not-allowed text-base md:text-sm touch-manipulation"
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck="false"
+            enterKeyHint="send"
           />
           <button
             type="submit"
             disabled={!inputValue.trim() || isTyping || showConsent}
-            className={`p-2 rounded-full transition-all ${
+            className={`p-3 md:p-2 rounded-full transition-all touch-manipulation min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 flex items-center justify-center ${
               inputValue.trim() && !isTyping && !showConsent
-                ? 'bg-primary text-white hover:bg-primary/90'
+                ? 'bg-primary text-white hover:bg-primary/90 active:scale-95'
                 : 'bg-gray-100 text-gray-400 cursor-not-allowed'
             }`}
           >
