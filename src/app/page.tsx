@@ -42,13 +42,13 @@ export default function Home() {
           }}
         >
           <KapNumeriquePremium />
+          <InteractivitySection />
           <ClientOnly>
             <TechnicalShowcase />
           </ClientOnly>
           <ClientOnly>
             <VisualEngagementSection />
           </ClientOnly>
-          <InteractivitySection />
         </div>
       </main>
     </>
