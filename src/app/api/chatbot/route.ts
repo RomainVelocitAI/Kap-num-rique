@@ -247,7 +247,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Gérer la session avec cookies
-    const session = getOrCreateSession(request, null);
+    const session = await getOrCreateSession(request, null);
     console.log('Session info:', {
       sessionId: session.sessionId,
       consentGiven: session.consentGiven,

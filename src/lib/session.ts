@@ -10,9 +10,9 @@ export interface SessionData {
   consentGiven: boolean;
 }
 
-export function getOrCreateSession(req?: any, res?: any): SessionData {
+export async function getOrCreateSession(req?: any, res?: any): Promise<SessionData> {
   // Utiliser l'API cookies de Next.js
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const existingSession = cookieStore.get(COOKIE_NAME);
   
   if (existingSession?.value) {
@@ -47,8 +47,8 @@ export function clearSession(req?: any, res?: any): void {
   // Cette fonction sera utilisée différemment dans l'API route
 }
 
-export function updateSessionConsent(consent: boolean, req?: any, res?: any): SessionData {
-  const session = getOrCreateSession(req, res);
+export async function updateSessionConsent(consent: boolean, req?: any, res?: any): Promise<SessionData> {
+  const session = await getOrCreateSession(req, res);
   session.consentGiven = consent;
   return session;
 }
