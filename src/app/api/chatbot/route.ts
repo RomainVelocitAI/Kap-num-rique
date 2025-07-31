@@ -22,6 +22,7 @@ const openai = new OpenAI({
 interface ChatRequest {
   message: string;
   consentGiven?: boolean;
+  forceRefresh?: boolean; // Permet de forcer le refresh du cache
 }
 
 interface ChatResponse {
@@ -59,13 +60,20 @@ interface FAQRecord {
 // Cache for FAQ data
 let faqCache: FAQRecord[] = [];
 let faqCacheTime = 0;
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
-async function getFAQData(): Promise<FAQRecord[]> {
+// Configuration du cache
+const DISABLE_CACHE = process.env.DISABLE_FAQ_CACHE === 'true';
+const DEFAULT_CACHE_DURATION = 20 * 1000; // 20 secondes par défaut
+const CACHE_DURATION = process.env.FAQ_CACHE_DURATION 
+  ? parseInt(process.env.FAQ_CACHE_DURATION, 10) 
+  : DEFAULT_CACHE_DURATION;
+
+async function getFAQData(forceRefresh: boolean = false): Promise<FAQRecord[]> {
   const now = Date.now();
   
-  // Return cached data if still valid
-  if (faqCache.length > 0 && now - faqCacheTime < CACHE_DURATION) {
+  // Return cached data if still valid and not forcing refresh (unless cache is disabled)
+  if (!DISABLE_CACHE && !forceRefresh && faqCache.length > 0 && now - faqCacheTime < CACHE_DURATION) {
+    console.log('Using cached FAQ data');
     return faqCache;
   }
 
@@ -95,6 +103,7 @@ async function getFAQData(): Promise<FAQRecord[]> {
     // Update cache
     faqCache = records;
     faqCacheTime = now;
+    console.log(`FAQ cache updated with ${records.length} records`);
 
     return records;
   } catch (error) {
@@ -254,7 +263,7 @@ async function saveConversation(
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json() as ChatRequest;
-    const { message, consentGiven } = body;
+    const { message, consentGiven, forceRefresh } = body;
 
     if (!message || typeof message !== 'string') {
       return NextResponse.json(
@@ -289,8 +298,8 @@ export async function POST(request: NextRequest) {
     // Récupérer la conversation existante
     const { recordId, data: conversationData } = await getOrCreateConversation(session.sessionId);
 
-    // Get FAQ data
-    const faqData = await getFAQData();
+    // Get FAQ data (with optional force refresh)
+    const faqData = await getFAQData(forceRefresh || false);
 
     // Build prompt with context
     const prompt = buildPrompt(faqData, message, conversationData.messages);
