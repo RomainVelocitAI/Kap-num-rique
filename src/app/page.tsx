@@ -1,14 +1,36 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
+import dynamic from 'next/dynamic'
 import Header from '../components/layout/Header'
 import HeroClient from '../components/sections/hero-client'
 import KapNumeriquePremium from '../components/sections/kap-numerique-premium'
-import TechnicalShowcase from '../components/sections/technical-showcase'
-import VisualEngagementSection from '../components/sections/visual-engagement-section'
 import InteractivitySection from '../components/sections/interactivity-section'
-import ClientOnly from '../components/ui/client-only'
-import ClientOnlySafe from '../components/ui/client-only-safe'
+
+// Import dynamique des sections qui causent des problèmes
+const TechnicalShowcase = dynamic(
+  () => import('../components/sections/technical-showcase'),
+  {
+    ssr: true,
+    loading: () => (
+      <div className="min-h-[400px] bg-black flex items-center justify-center">
+        <div className="text-white text-2xl">Chargement des métriques techniques...</div>
+      </div>
+    ),
+  }
+)
+
+const VisualEngagementSection = dynamic(
+  () => import('../components/sections/visual-engagement-section'),
+  {
+    ssr: true,
+    loading: () => (
+      <div className="min-h-[400px] bg-gray-900 flex items-center justify-center">
+        <div className="text-white text-2xl">Chargement des animations...</div>
+      </div>
+    ),
+  }
+)
 
 export default function Home() {
   const [showHeader, setShowHeader] = useState(false)
@@ -42,13 +64,15 @@ export default function Home() {
           }}
         >
           <KapNumeriquePremium />
-          <InteractivitySection />
-          <ClientOnly>
+          <Suspense fallback={
+            <div className="min-h-[400px] bg-black flex items-center justify-center">
+              <div className="text-white text-2xl">Chargement...</div>
+            </div>
+          }>
             <TechnicalShowcase />
-          </ClientOnly>
-          <ClientOnly>
             <VisualEngagementSection />
-          </ClientOnly>
+          </Suspense>
+          <InteractivitySection />
         </div>
       </main>
     </>
