@@ -200,39 +200,10 @@ async function saveConversation(
   conversationData: ConversationData
 ): Promise<void> {
   try {
-    // Formater les messages pour une meilleure lisibilité
-    const formattedConversation = conversationData.messages
-      .map((msg, index) => {
-        const time = new Date(msg.timestamp).toLocaleString('fr-FR', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        });
-        return `[${time}] ${msg.type === 'user' ? '👤 Client' : '🤖 Assistant'}:\n${msg.content}`;
-      })
-      .join('\n\n---\n\n');
-
-    // Créer un résumé de la conversation
-    const lastUserMessage = conversationData.messages
-      .filter(m => m.type === 'user')
-      .pop();
-    const conversationSummary = lastUserMessage 
-      ? `Dernière question: "${lastUserMessage.content.substring(0, 100)}${lastUserMessage.content.length > 100 ? '...' : ''}"`
-      : 'Conversation vide';
-
-    // Statistiques de la conversation
-    const userMessages = conversationData.messages.filter(m => m.type === 'user').length;
-    const botMessages = conversationData.messages.filter(m => m.type === 'bot').length;
-    const startTime = new Date(conversationData.metadata.startTime).toLocaleString('fr-FR');
-    const lastActivity = new Date(conversationData.metadata.lastActivity).toLocaleString('fr-FR');
-
-    const conversationStats = `📊 Statistiques:
-- Messages du client: ${userMessages}
-- Réponses de l'assistant: ${botMessages}
-- Début: ${startTime}
-- Dernière activité: ${lastActivity}`;
+    // Format simple pour une lecture facile
+    const simpleConversation = conversationData.messages
+      .map(msg => `${msg.type === 'user' ? 'Client' : 'Bot'}: ${msg.content}`)
+      .join('\n\n');
 
     // Champs de base toujours présents
     const fields: any = {
@@ -242,40 +213,16 @@ async function saveConversation(
       LastActivity: new Date().toISOString(),
       MessageCount: conversationData.messages.length,
     };
-
-    // Ajouter les champs formatés seulement s'ils sont supportés
-    // Pour l'instant, on les commente jusqu'à ce qu'ils soient créés dans Airtable
-    // fields.FormattedConversation = formattedConversation;
-    // fields.ConversationSummary = conversationSummary;
-    // fields.ConversationStats = conversationStats;
-
-    // Alternative: stocker les informations formatées dans le champ Metadata
-    const enrichedMetadata = {
-      ...conversationData.metadata,
-      formattedSummary: conversationSummary,
-      stats: {
-        userMessages,
-        botMessages,
-        startTimeFormatted: startTime,
-        lastActivityFormatted: lastActivity
-      }
-    };
-    fields.Metadata = JSON.stringify(enrichedMetadata, null, 2);
     
-    // Stocker aussi une version texte simple dans UserMessage et BotResponse
-    // On utilise les champs existants pour stocker un résumé formaté
-    if (conversationData.messages.length > 0) {
-      // Prendre le dernier échange
-      const lastExchange = conversationData.messages.slice(-2);
-      const lastUserMsg = lastExchange.find(m => m.type === 'user');
-      const lastBotMsg = lastExchange.find(m => m.type === 'bot');
-      
-      if (lastUserMsg) {
-        fields.UserMessage = `[${new Date(lastUserMsg.timestamp).toLocaleString('fr-FR')}]\n${lastUserMsg.content}`;
-      }
-      if (lastBotMsg) {
-        fields.BotResponse = `[${new Date(lastBotMsg.timestamp).toLocaleString('fr-FR')}]\n${lastBotMsg.content}`;
-      }
+    // Stocker la conversation simple dans UserMessage (qui a plus de place)
+    fields.UserMessage = simpleConversation;
+    
+    // Stocker juste la dernière réponse du bot dans BotResponse
+    const lastBotMessage = conversationData.messages
+      .filter(m => m.type === 'bot')
+      .pop();
+    if (lastBotMessage) {
+      fields.BotResponse = lastBotMessage.content;
     }
 
     console.log('Saving conversation:', {
