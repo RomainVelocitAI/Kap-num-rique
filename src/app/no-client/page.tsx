@@ -1,10 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Header from '../components/layout/Header'
-import HeroClient from '../components/sections/hero-client'
-import KapNumeriquePremium from '../components/sections/kap-numerique-premium'
-import InteractivitySection from '../components/sections/interactivity-section'
+import Header from '../../components/layout/Header'
+import HeroClient from '../../components/sections/hero-client'
+import KapNumeriquePremium from '../../components/sections/kap-numerique-premium'
+import InteractivitySection from '../../components/sections/interactivity-section'
 
 export default function Home() {
   const [showHeader, setShowHeader] = useState(false)

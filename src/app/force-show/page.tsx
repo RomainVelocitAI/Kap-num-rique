@@ -1,13 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Header from '../components/layout/Header'
-import HeroClient from '../components/sections/hero-client'
-import KapNumeriquePremium from '../components/sections/kap-numerique-premium'
-import TechnicalShowcase from '../components/sections/technical-showcase'
-import VisualEngagementSection from '../components/sections/visual-engagement-section'
-import InteractivitySection from '../components/sections/interactivity-section'
-import ClientOnly from '../components/ui/client-only'
+import Header from '../../components/layout/Header'
+import HeroClient from '../../components/sections/hero-client'
+import KapNumeriquePremium from '../../components/sections/kap-numerique-premium'
+import TechnicalShowcase from '../../components/sections/technical-showcase'
+import VisualEngagementSection from '../../components/sections/visual-engagement-section'
+import InteractivitySection from '../../components/sections/interactivity-section'
+import ClientOnly from '../../components/ui/client-only'
 
 export default function HomeForceShow() {
   const [showHeader, setShowHeader] = useState(false)
