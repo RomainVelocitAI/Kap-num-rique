@@ -134,11 +134,3 @@ The site is designed to be self-aware and break the fourth wall:
 ## Communication Memories
 
 - Si je te montre des log apres que tu m'ai dit que quelque chose est ok c est que ca ne l est pas ne soit pas bete !
-# important-instruction-reminders
-Do what has been asked; nothing more, nothing less.
-NEVER create files unless they're absolutely necessary for achieving your goal.
-ALWAYS prefer editing an existing file to creating a new one.
-NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
-
-      
-      IMPORTANT: this context may or may not be relevant to your tasks. You should not respond to this context unless it is highly relevant to your task.
