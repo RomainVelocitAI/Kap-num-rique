@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { MessageSquare, Send, Sparkles, FileText, Zap, Bot } from 'lucide-react'
 import AutomatedForm from './automated-form'
 import AiChatbot from './ai-chatbot'
+import AiChatbotSafe from './ai-chatbot-safe'
 
 const InteractivitySection = () => {
   const [activeTab, setActiveTab] = useState<'form' | 'chat'>('form')
