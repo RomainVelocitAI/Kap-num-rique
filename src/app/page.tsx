@@ -8,6 +8,7 @@ import TechnicalShowcase from '../components/sections/technical-showcase'
 import VisualEngagementSection from '../components/sections/visual-engagement-section'
 import InteractivitySection from '../components/sections/interactivity-section'
 import ClientOnly from '../components/ui/client-only'
+import ClientOnlySafe from '../components/ui/client-only-safe'
 
 export default function Home() {
   const [showHeader, setShowHeader] = useState(false)
@@ -47,9 +48,7 @@ export default function Home() {
           <ClientOnly>
             <VisualEngagementSection />
           </ClientOnly>
-          <ClientOnly>
-            <InteractivitySection />
-          </ClientOnly>
+          <InteractivitySection />
         </div>
       </main>
     </>
