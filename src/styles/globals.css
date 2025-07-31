@@ -121,6 +121,24 @@
       -webkit-overflow-scrolling: touch;
       overscroll-behavior: contain;
     }
+    
+    /* Prevent UI elements from blocking scroll on mobile */
+    .scroll-progress {
+      pointer-events: none !important;
+    }
+    
+    .scroll-progress .scroll-text,
+    .scroll-progress .progress-track,
+    .scroll-progress .section-counter {
+      pointer-events: none !important;
+    }
+    
+    /* Ensure all fixed positioned UI elements don't block scroll */
+    .side-menu,
+    .vertical-text,
+    .menu-icon {
+      pointer-events: none !important;
+    }
   }
 
   /* Smooth scroll */
@@ -334,7 +352,8 @@
   /* Mobile optimizations for hero content */
   @media (max-width: 768px) {
     .side-menu {
-      display: none; /* Hide side menu on mobile */
+      display: none !important; /* Hide side menu on mobile */
+      pointer-events: none !important; /* Extra safety */
     }
     
     .hero-title {
