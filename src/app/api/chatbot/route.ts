@@ -200,9 +200,46 @@ async function saveConversation(
   conversationData: ConversationData
 ): Promise<void> {
   try {
+    // Formater les messages pour une meilleure lisibilité
+    const formattedConversation = conversationData.messages
+      .map((msg, index) => {
+        const time = new Date(msg.timestamp).toLocaleString('fr-FR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+        return `[${time}] ${msg.type === 'user' ? '👤 Client' : '🤖 Assistant'}:\n${msg.content}`;
+      })
+      .join('\n\n---\n\n');
+
+    // Créer un résumé de la conversation
+    const lastUserMessage = conversationData.messages
+      .filter(m => m.type === 'user')
+      .pop();
+    const conversationSummary = lastUserMessage 
+      ? `Dernière question: "${lastUserMessage.content.substring(0, 100)}${lastUserMessage.content.length > 100 ? '...' : ''}"`
+      : 'Conversation vide';
+
+    // Statistiques de la conversation
+    const userMessages = conversationData.messages.filter(m => m.type === 'user').length;
+    const botMessages = conversationData.messages.filter(m => m.type === 'bot').length;
+    const startTime = new Date(conversationData.metadata.startTime).toLocaleString('fr-FR');
+    const lastActivity = new Date(conversationData.metadata.lastActivity).toLocaleString('fr-FR');
+
+    const conversationStats = `📊 Statistiques:
+- Messages du client: ${userMessages}
+- Réponses de l'assistant: ${botMessages}
+- Début: ${startTime}
+- Dernière activité: ${lastActivity}`;
+
     const fields = {
       SessionID: sessionId,
-      Messages: JSON.stringify(conversationData.messages),
+      Messages: JSON.stringify(conversationData.messages), // Garder le JSON pour l'API
+      FormattedConversation: formattedConversation, // Version formatée pour lecture
+      ConversationSummary: conversationSummary,
+      ConversationStats: conversationStats,
       Metadata: JSON.stringify(conversationData.metadata),
       LastActivity: new Date().toISOString(),
       MessageCount: conversationData.messages.length,
