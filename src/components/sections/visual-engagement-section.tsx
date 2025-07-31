@@ -98,32 +98,6 @@ export default function VisualEngagementSection() {
           </motion.p>
         </motion.div>
 
-        {/* Statistics Grid */}
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={staggerContainer}
-          className="grid md:grid-cols-4 gap-6 mb-20"
-        >
-          {[
-            { icon: MousePointer2, stat: "38%", label: "Plus d'engagement", desc: "avec des éléments interactifs" },
-            { icon: Eye, stat: "5.4s", label: "Temps d'attention", desc: "supplémentaire sur la page" },
-            { icon: TrendingUp, stat: "+52%", label: "Taux de conversion", desc: "grâce aux animations" },
-            { icon: Zap, stat: "91%", label: "Mémorisation", desc: "des sites interactifs" }
-          ].map((item, index) => (
-            <motion.div
-              key={index}
-              variants={fadeInUpVariants}
-              className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-6 text-center hover:border-primary-600/50 transition-colors duration-300"
-            >
-              <item.icon className="w-10 h-10 text-primary-400 mx-auto mb-4" />
-              <div className="text-3xl font-bold text-white mb-2">{item.stat}</div>
-              <div className="text-sm font-medium text-gray-300 mb-1">{item.label}</div>
-              <div className="text-xs text-gray-500">{item.desc}</div>
-            </motion.div>
-          ))}
-        </motion.div>
 
         {/* Features Grid */}
         <motion.div

@@ -487,7 +487,10 @@ const InteractiveArrowDemo: React.FC<InteractiveArrowDemoProps> = ({
                             
                             {/* Interaction pour l'onglet Interaction */}
                             {activeFeature === 'interaction' && (
-                                <div className="flex items-center justify-center w-full h-full p-8">
+                                <div className="flex flex-col items-center justify-center w-full h-full p-8 space-y-4">
+                                    <p className="text-gray-400 text-lg animate-pulse">
+                                        Grattez pour découvrir
+                                    </p>
                                     <ScratchToReveal
                                         width={320}
                                         height={320}
@@ -498,13 +501,13 @@ const InteractiveArrowDemo: React.FC<InteractiveArrowDemoProps> = ({
                                         <div className="flex items-center justify-center w-full h-full bg-gradient-to-br from-primary-600 to-secondary-600 rounded-xl">
                                             <div className="text-center p-8 text-white">
                                                 <h3 className="text-2xl font-bold mb-4">
-                                                    Surprise révélée !
+                                                    L'expérience tactile
                                                 </h3>
                                                 <p className="text-lg">
-                                                    Votre site devient une expérience tactile et ludique.
+                                                    Votre site devient une surface de jeu. Chaque interaction crée une connexion.
                                                 </p>
                                                 <p className="text-sm mt-4 text-gray-200">
-                                                    L'engagement par l'interaction
+                                                    Le web n'est plus passif
                                                 </p>
                                             </div>
                                         </div>

@@ -47,7 +47,7 @@ const ParticleTextEffect: React.FC<ParticleTextEffectProps> = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
   const animationIdRef = useRef<number | null>(null);
-  const particlesRef = useRef<Particle[]>([]);
+  const particlesRef = useRef<ParticleClass[]>([]);
   const pointerRef = useRef<Pointer>({});
   const hasPointerRef = useRef<boolean>(false);
   const interactionRadiusRef = useRef<number>(100);
@@ -148,12 +148,13 @@ const ParticleTextEffect: React.FC<ParticleTextEffectProps> = ({
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     pixels.forEach((p, i) => {
-      particlesRef.current[i] = new ParticleClass(
+      const particle = new ParticleClass(
         textBox.x! + p.x,
         textBox.y! + p.y,
         p.rgb.slice(0, 3)
       );
-      particlesRef.current[i].draw();
+      particlesRef.current[i] = particle;
+      particle.draw();
     });
 
     particlesRef.current.splice(pixels.length, particlesRef.current.length);
