@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Send, Bot, User, Sparkles, ThumbsUp, ThumbsDown, RotateCw, AlertCircle } from 'lucide-react'
+import { Send, Bot, User, Sparkles, ThumbsUp, ThumbsDown, RotateCw, AlertCircle, Cookie } from 'lucide-react'
 
 interface Message {
   id: string
@@ -10,6 +10,45 @@ interface Message {
   sender: 'user' | 'bot'
   timestamp: Date
   isTyping?: boolean
+}
+
+interface ConsentBannerProps {
+  onAccept: () => void
+  onDecline: () => void
+}
+
+function ConsentBanner({ onAccept, onDecline }: ConsentBannerProps) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="mx-4 mb-2 bg-yellow-50 border border-yellow-200 rounded-lg p-3"
+    >
+      <div className="flex items-start gap-2">
+        <Cookie className="w-5 h-5 text-yellow-600 mt-0.5" />
+        <div className="flex-1">
+          <p className="text-sm text-gray-700 mb-2">
+            Pour améliorer votre expérience, ce chatbot utilise un cookie pour mémoriser notre conversation. 
+            Aucune donnée personnelle n'est collectée.
+          </p>
+          <div className="flex gap-2">
+            <button
+              onClick={onAccept}
+              className="px-3 py-1.5 bg-primary text-white rounded-md text-sm hover:bg-primary/90 transition-colors"
+            >
+              J'accepte
+            </button>
+            <button
+              onClick={onDecline}
+              className="px-3 py-1.5 bg-gray-200 text-gray-700 rounded-md text-sm hover:bg-gray-300 transition-colors"
+            >
+              Je refuse
+            </button>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  )
 }
 
 const suggestedQuestions = [
@@ -32,6 +71,9 @@ const AiChatbot = () => {
   const [isTyping, setIsTyping] = useState(false)
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [showConsent, setShowConsent] = useState(false)
+  const [consentGiven, setConsentGiven] = useState(false)
+  const [pendingMessage, setPendingMessage] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const [feedback, setFeedback] = useState<{ [key: string]: 'up' | 'down' | null }>({})
 
@@ -43,12 +85,13 @@ const AiChatbot = () => {
     scrollToBottom()
   }, [messages])
 
-  const handleSend = async () => {
-    if (!inputValue.trim()) return
+  const handleSend = async (messageText?: string) => {
+    const textToSend = messageText || inputValue.trim()
+    if (!textToSend) return
 
     const userMessage: Message = {
       id: Date.now().toString(),
-      text: inputValue,
+      text: textToSend,
       sender: 'user',
       timestamp: new Date()
     }
@@ -65,8 +108,8 @@ const AiChatbot = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: inputValue,
-          sessionId: sessionId,
+          message: textToSend,
+          consentGiven: consentGiven,
         }),
       })
 
@@ -75,6 +118,14 @@ const AiChatbot = () => {
       }
 
       const data = await response.json()
+
+      // Vérifier si le consentement est requis
+      if (data.requiresConsent) {
+        setShowConsent(true)
+        setPendingMessage(textToSend)
+        // Retirer le message de consentement automatique
+        return
+      }
 
       // Save session ID for future messages
       if (!sessionId && data.sessionId) {
@@ -106,9 +157,41 @@ const AiChatbot = () => {
     }
   }
 
+  const handleConsent = async (accepted: boolean) => {
+    setShowConsent(false)
+    setConsentGiven(accepted)
+
+    if (accepted) {
+      // Ajouter un message de confirmation
+      const confirmMessage: Message = {
+        id: Date.now().toString(),
+        text: "Merci ! Je peux maintenant mémoriser notre conversation pour une meilleure expérience. Comment puis-je vous aider ?",
+        sender: 'bot',
+        timestamp: new Date()
+      }
+      setMessages(prev => [...prev, confirmMessage])
+
+      // Renvoyer le message en attente si il y en a un
+      if (pendingMessage) {
+        setTimeout(() => {
+          handleSend(pendingMessage)
+          setPendingMessage(null)
+        }, 500)
+      }
+    } else {
+      const declineMessage: Message = {
+        id: Date.now().toString(),
+        text: "Pas de problème ! Je peux quand même répondre à vos questions, mais je ne pourrai pas me souvenir de notre conversation si vous revenez plus tard. Comment puis-je vous aider ?",
+        sender: 'bot',
+        timestamp: new Date()
+      }
+      setMessages(prev => [...prev, declineMessage])
+    }
+  }
+
   const handleSuggestedQuestion = (question: string) => {
     setInputValue(question)
-    handleSend()
+    setTimeout(() => handleSend(question), 100)
   }
 
   const handleFeedback = async (messageId: string, type: 'up' | 'down') => {
@@ -144,8 +227,10 @@ const AiChatbot = () => {
       timestamp: new Date()
     }])
     setFeedback({})
-    setSessionId(null)
+    // Note: on ne réinitialise pas sessionId et consentGiven pour garder la session
     setError(null)
+    setShowConsent(false)
+    setPendingMessage(null)
   }
 
   return (
@@ -169,6 +254,14 @@ const AiChatbot = () => {
           <RotateCw className="w-4 h-4" />
         </button>
       </div>
+
+      {/* Consent Banner */}
+      {showConsent && (
+        <ConsentBanner
+          onAccept={() => handleConsent(true)}
+          onDecline={() => handleConsent(false)}
+        />
+      )}
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -195,7 +288,7 @@ const AiChatbot = () => {
                       : 'bg-gray-100 text-gray-800 rounded-bl-sm'
                   }`}
                 >
-                  <p className="text-sm">{message.text}</p>
+                  <p className="text-sm whitespace-pre-wrap">{message.text}</p>
                 </div>
                 
                 {message.sender === 'bot' && message.id !== '1' && (
@@ -274,7 +367,7 @@ const AiChatbot = () => {
       </div>
 
       {/* Suggested Questions */}
-      {messages.length === 1 && (
+      {messages.length === 1 && !showConsent && (
         <div className="px-4 pb-2">
           <p className="text-xs text-gray-500 mb-2">Questions fréquentes :</p>
           <div className="flex flex-wrap gap-2">
@@ -315,13 +408,14 @@ const AiChatbot = () => {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             placeholder="Tapez votre message..."
-            className="flex-1 px-4 py-2 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+            disabled={isTyping || showConsent}
+            className="flex-1 px-4 py-2 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           />
           <button
             type="submit"
-            disabled={!inputValue.trim() || isTyping}
+            disabled={!inputValue.trim() || isTyping || showConsent}
             className={`p-2 rounded-full transition-all ${
-              inputValue.trim() && !isTyping
+              inputValue.trim() && !isTyping && !showConsent
                 ? 'bg-primary text-white hover:bg-primary/90'
                 : 'bg-gray-100 text-gray-400 cursor-not-allowed'
             }`}
@@ -332,6 +426,13 @@ const AiChatbot = () => {
         <p className="text-xs text-gray-400 mt-2 text-center">
           <Sparkles className="w-3 h-3 inline mr-1" />
           Propulsé par l'IA • Réponses instantanées 24/7
+          {consentGiven && (
+            <>
+              {' • '}
+              <Cookie className="w-3 h-3 inline mr-1" />
+              Session mémorisée
+            </>
+          )}
         </p>
       </div>
     </div>

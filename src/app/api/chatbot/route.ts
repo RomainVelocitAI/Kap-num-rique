@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import Airtable from 'airtable';
 import OpenAI from 'openai';
 import { v4 as uuidv4 } from 'uuid';
+import { getOrCreateSession, saveSession } from '@/lib/session';
 
 // Initialize Airtable
 const base = new Airtable({
@@ -20,12 +21,29 @@ const openai = new OpenAI({
 
 interface ChatRequest {
   message: string;
-  sessionId?: string;
+  consentGiven?: boolean;
 }
 
 interface ChatResponse {
   response: string;
   sessionId: string;
+  requiresConsent?: boolean;
+}
+
+interface Message {
+  id: string;
+  type: 'user' | 'bot';
+  content: string;
+  timestamp: string;
+}
+
+interface ConversationData {
+  messages: Message[];
+  metadata: {
+    startTime: string;
+    lastActivity: string;
+    messageCount: number;
+  };
 }
 
 interface FAQRecord {
@@ -86,16 +104,25 @@ async function getFAQData(): Promise<FAQRecord[]> {
   }
 }
 
-function buildPrompt(faqData: FAQRecord[], userMessage: string): string {
+function buildPrompt(faqData: FAQRecord[], userMessage: string, previousMessages?: Message[]): string {
   const faqText = faqData
     .map((record) => `Q: ${record.fields.Question}\nR: ${record.fields.Reponse}`)
     .join('\n\n');
+
+  // Construire l'historique de conversation
+  let conversationHistory = '';
+  if (previousMessages && previousMessages.length > 0) {
+    // Prendre les 5 derniers messages pour le contexte
+    const recentMessages = previousMessages.slice(-5);
+    conversationHistory = '\nHistorique de la conversation:\n' + 
+      recentMessages.map(msg => `${msg.type === 'user' ? 'Utilisateur' : 'Assistant'}: ${msg.content}`).join('\n') + '\n\n';
+  }
 
   return `Tu es l'assistant virtuel de Kap Numérique, une agence digitale à La Réunion spécialisée dans la transformation numérique des entreprises.
 
 Base de connaissances FAQ:
 ${faqText}
-
+${conversationHistory}
 Instructions importantes:
 - Réponds en français de manière naturelle et conversationnelle
 - Sois professionnel mais chaleureux (utilise le tutoiement)
@@ -104,14 +131,100 @@ Instructions importantes:
 - Mets l'accent sur la subvention Kap Numérique qui finance 80% des projets
 - Sois concis mais informatif
 - N'hésite pas à poser des questions pour mieux comprendre les besoins
+- Tiens compte de l'historique de la conversation si présent
 
 Question de l'utilisateur: ${userMessage}`;
+}
+
+async function getOrCreateConversation(sessionId: string): Promise<{ recordId: string | null; data: ConversationData }> {
+  try {
+    // Chercher une conversation existante pour cette session
+    const records = await base('Conversations')
+      .select({
+        filterByFormula: `{SessionID} = '${sessionId}'`,
+        maxRecords: 1,
+        fields: ['SessionID', 'Messages', 'Metadata'],
+      })
+      .firstPage();
+
+    if (records.length > 0) {
+      const record = records[0];
+      const messagesField = record.get('Messages');
+      const metadataField = record.get('Metadata');
+
+      // Parser les données JSON
+      const messages = messagesField ? JSON.parse(messagesField as string) : [];
+      const metadata = metadataField ? JSON.parse(metadataField as string) : {
+        startTime: new Date().toISOString(),
+        lastActivity: new Date().toISOString(),
+        messageCount: 0,
+      };
+
+      return {
+        recordId: record.id,
+        data: { messages, metadata },
+      };
+    }
+
+    // Pas de conversation existante
+    return {
+      recordId: null,
+      data: {
+        messages: [],
+        metadata: {
+          startTime: new Date().toISOString(),
+          lastActivity: new Date().toISOString(),
+          messageCount: 0,
+        },
+      },
+    };
+  } catch (error) {
+    console.error('Error fetching conversation:', error);
+    return {
+      recordId: null,
+      data: {
+        messages: [],
+        metadata: {
+          startTime: new Date().toISOString(),
+          lastActivity: new Date().toISOString(),
+          messageCount: 0,
+        },
+      },
+    };
+  }
+}
+
+async function saveConversation(
+  sessionId: string,
+  recordId: string | null,
+  conversationData: ConversationData
+): Promise<void> {
+  try {
+    const fields = {
+      SessionID: sessionId,
+      Messages: JSON.stringify(conversationData.messages),
+      Metadata: JSON.stringify(conversationData.metadata),
+      LastActivity: new Date().toISOString(),
+      MessageCount: conversationData.messages.length,
+    };
+
+    if (recordId) {
+      // Mettre à jour l'enregistrement existant
+      await base('Conversations').update(recordId, fields);
+    } else {
+      // Créer un nouvel enregistrement
+      await base('Conversations').create([{ fields }]);
+    }
+  } catch (error) {
+    console.error('Error saving conversation:', error);
+    // Ne pas propager l'erreur pour ne pas bloquer la réponse
+  }
 }
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json() as ChatRequest;
-    const { message, sessionId = uuidv4() } = body;
+    const { message, consentGiven } = body;
 
     if (!message || typeof message !== 'string') {
       return NextResponse.json(
@@ -120,11 +233,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Gérer la session avec cookies
+    const session = getOrCreateSession(request, null);
+    
+    // Si pas de consentement, demander le consentement
+    if (!session.consentGiven && !consentGiven) {
+      return NextResponse.json({
+        response: "Pour utiliser ce chatbot, j'ai besoin de ton consentement pour stocker notre conversation dans un cookie. Cela me permettra de me souvenir de notre échange si tu reviens plus tard. Acceptes-tu ?",
+        sessionId: session.sessionId,
+        requiresConsent: true,
+      });
+    }
+
+    // Si consentement donné, mettre à jour la session
+    if (consentGiven && !session.consentGiven) {
+      session.consentGiven = true;
+      saveSession(session, request, null);
+    }
+
+    // Récupérer la conversation existante
+    const { recordId, data: conversationData } = await getOrCreateConversation(session.sessionId);
+
     // Get FAQ data
     const faqData = await getFAQData();
 
     // Build prompt with context
-    const prompt = buildPrompt(faqData, message);
+    const prompt = buildPrompt(faqData, message, conversationData.messages);
 
     // Call OpenRouter API
     const completion = await openai.chat.completions.create({
@@ -146,31 +280,48 @@ export async function POST(request: NextRequest) {
     const response = completion.choices[0]?.message?.content || 
       "Désolé, je n'ai pas pu générer une réponse. Peux-tu reformuler ta question ?";
 
-    // Generate message ID
-    const messageId = uuidv4();
-
-    // Save conversation to Airtable (non-blocking)
-    base('Conversations').create([
-      {
-        fields: {
-          MessageID: messageId,
-          SessionID: sessionId,
-          UserMessage: message,
-          BotResponse: response,
-          Timestamp: new Date().toISOString(),
-        },
-      },
-    ]).catch((error) => {
-      console.error('Error saving conversation:', error);
-      // Don't throw - we still want to return the response to the user
-    });
-
-    const result: ChatResponse = {
-      response,
-      sessionId,
+    // Ajouter les messages à la conversation
+    const userMessage: Message = {
+      id: uuidv4(),
+      type: 'user',
+      content: message,
+      timestamp: new Date().toISOString(),
     };
 
-    return NextResponse.json(result);
+    const botMessage: Message = {
+      id: uuidv4(),
+      type: 'bot',
+      content: response,
+      timestamp: new Date().toISOString(),
+    };
+
+    conversationData.messages.push(userMessage, botMessage);
+    conversationData.metadata.lastActivity = new Date().toISOString();
+    conversationData.metadata.messageCount = conversationData.messages.length;
+
+    // Sauvegarder la conversation mise à jour
+    await saveConversation(session.sessionId, recordId, conversationData);
+
+    // Créer la réponse avec les headers de cookie
+    const result: ChatResponse = {
+      response,
+      sessionId: session.sessionId,
+    };
+
+    const nextResponse = NextResponse.json(result);
+    
+    // Sauvegarder la session dans le cookie
+    if (session.consentGiven) {
+      nextResponse.cookies.set('kap_numerique_session', JSON.stringify(session), {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 30 * 24 * 60 * 60, // 30 jours
+        path: '/',
+      });
+    }
+
+    return nextResponse;
   } catch (error) {
     console.error('Chatbot API error:', error);
     
