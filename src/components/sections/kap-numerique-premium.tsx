@@ -61,17 +61,30 @@ export default function KapNumeriquePremium() {
       })
 
       // Feature cards stagger animation
-      gsap.from('.feature-card', {
-        y: 50,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: '.features-grid',
-          start: 'top 70%'
-        }
-      })
+      const featureCards = document.querySelectorAll('.feature-card')
+      
+      if (featureCards.length > 0) {
+        // Réinitialiser les styles pour s'assurer que les cartes sont dans le bon état initial
+        gsap.set('.feature-card', {
+          opacity: 0,
+          y: 50
+        })
+        
+        // Créer l'animation
+        gsap.to('.feature-card', {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: '.features-grid',
+            start: 'top bottom',
+            end: 'bottom top',
+            toggleActions: 'play none none reverse'
+          }
+        })
+      }
 
       // Timeline dots animation - commented out as elements don't exist
       // gsap.from('.timeline-dot', {
@@ -142,7 +155,7 @@ export default function KapNumeriquePremium() {
         </div>
 
         {/* Interactive Comparison Section */}
-        <div ref={comparisonRef} className="mb-32 max-w-7xl mx-auto">
+        <div ref={comparisonRef} className="mb-16 max-w-7xl mx-auto">
           <h3 className="text-5xl md:text-8xl font-display text-center mb-16 text-gray-900 uppercase tracking-tight">
             CE QU'ILS NE VOUS <span className="text-red-600">DIRONT</span> <span className="bg-gradient-to-r from-gold-500 to-gold-600 bg-clip-text text-transparent">JAMAIS</span>
           </h3>
@@ -358,10 +371,11 @@ export default function KapNumeriquePremium() {
         </div>
 
         {/* Premium Features Grid */}
-        <div className="features-grid grid md:grid-cols-3 gap-8 mb-32 bg-gray-100 p-12 rounded-3xl">
-          <h2 className="col-span-full text-4xl font-display text-center mb-12 text-gray-900">
-            POURQUOI NOUS SOMMES DIFFÉRENTS
-          </h2>
+        <div className="features-grid relative">
+          <div className="grid md:grid-cols-3 gap-8 mb-32">
+            <h2 className="col-span-full text-4xl font-display text-center mb-12 text-gray-900">
+              POURQUOI NOUS SOMMES DIFFÉRENTS
+            </h2>
           {[
             {
               icon: Zap,
@@ -385,23 +399,19 @@ export default function KapNumeriquePremium() {
               accent: "text-purple-500"
             }
           ].map((feature, i) => (
-            <motion.div 
+            <div 
               key={i}
-              className="feature-card bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100"
-              whileHover={{ y: -5 }}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
+              className="feature-card bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 cursor-pointer opacity-100"
+              style={{ opacity: 1, transform: 'translateY(0)' }}
             >
               <feature.icon className={`w-12 h-12 ${feature.accent} mb-4`} />
               <h4 className="text-xl font-bold text-gray-900 mb-1">{feature.title}</h4>
               <p className="text-sm text-gray-500 mb-3">{feature.subtitle}</p>
-              <p className="text-gray-600">{feature.description}</p>
-            </motion.div>
+              <p className="text-base font-medium text-gray-800">{feature.description}</p>
+            </div>
           ))}
         </div>
-
+        </div>
 
         {/* Final CTA */}
         <div className="text-center">
