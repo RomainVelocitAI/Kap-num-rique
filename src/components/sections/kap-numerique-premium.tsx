@@ -436,11 +436,11 @@ export default function KapNumeriquePremium() {
                     </div>
                     <div className="flex items-start gap-3">
                       <Check className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
-                      <span className="text-sm text-gray-700">Performance optimale (score 95+)</span>
+                      <span className="text-sm text-gray-700">Performance optimale (score 90+)</span>
                     </div>
                     <div className="flex items-start gap-3">
                       <Check className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
-                      <span className="text-sm text-gray-700">IA intégrée pour l'assistance client</span>
+                      <span className="text-sm text-gray-700">Formulaires automatisés</span>
                     </div>
                   </div>
                 </div>
@@ -468,10 +468,6 @@ export default function KapNumeriquePremium() {
                       <Check className="w-5 h-5 text-gold-600 mt-0.5 flex-shrink-0" />
                       <span className="text-sm text-gray-700">Tracking & analytics configurés</span>
                     </div>
-                    <div className="flex items-start gap-3">
-                      <Check className="w-5 h-5 text-gold-600 mt-0.5 flex-shrink-0" />
-                      <span className="text-sm text-gray-700">Rapport mensuel de performance</span>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -489,7 +485,7 @@ export default function KapNumeriquePremium() {
                   <p className="text-gray-400">Clients satisfaits</p>
                 </div>
                 <div>
-                  <div className="text-5xl font-display font-black text-gold-400 mb-2">95+</div>
+                  <div className="text-5xl font-display font-black text-gold-400 mb-2">90+</div>
                   <p className="text-gray-400">Score performance</p>
                 </div>
                 <div>
