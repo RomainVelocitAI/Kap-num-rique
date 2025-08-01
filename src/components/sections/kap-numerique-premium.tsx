@@ -406,7 +406,7 @@ export default function KapNumeriquePremium() {
                     </div>
                     <div className="flex items-start gap-3">
                       <Check className="w-5 h-5 text-primary-600 mt-0.5 flex-shrink-0" />
-                      <span className="text-sm text-gray-700">Disponible 7j/7 pour vos questions</span>
+                      <span className="text-sm text-gray-700">Réponses rapides à vos questions</span>
                     </div>
                     <div className="flex items-start gap-3">
                       <Check className="w-5 h-5 text-primary-600 mt-0.5 flex-shrink-0" />
@@ -481,20 +481,20 @@ export default function KapNumeriquePremium() {
             <div className="mt-20 bg-gradient-to-r from-gray-900 to-black rounded-3xl p-8 md:p-12">
               <div className="grid md:grid-cols-4 gap-8 text-center">
                 <div>
-                  <div className="text-5xl font-display font-black text-primary-400 mb-2">48h</div>
-                  <p className="text-gray-400">Mise en ligne express</p>
+                  <div className="text-5xl font-display font-black text-primary-400 mb-2">1200€</div>
+                  <p className="text-gray-400">Subvention Kap Numérik</p>
                 </div>
                 <div>
                   <div className="text-5xl font-display font-black text-red-400 mb-2">100%</div>
                   <p className="text-gray-400">Clients satisfaits</p>
                 </div>
                 <div>
-                  <div className="text-5xl font-display font-black text-gold-400 mb-2">+150%</div>
-                  <p className="text-gray-400">Augmentation du trafic</p>
+                  <div className="text-5xl font-display font-black text-gold-400 mb-2">95+</div>
+                  <p className="text-gray-400">Score performance</p>
                 </div>
                 <div>
-                  <div className="text-5xl font-display font-black text-green-400 mb-2">24/7</div>
-                  <p className="text-gray-400">Support disponible</p>
+                  <div className="text-5xl font-display font-black text-green-400 mb-2">90j</div>
+                  <p className="text-gray-400">Support inclus</p>
                 </div>
               </div>
             </div>
