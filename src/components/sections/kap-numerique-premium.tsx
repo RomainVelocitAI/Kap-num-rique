@@ -60,31 +60,31 @@ export default function KapNumeriquePremium() {
         })
       })
 
-      // Feature cards stagger animation
-      const featureCards = document.querySelectorAll('.feature-card')
+      // Feature cards stagger animation - DÉSACTIVÉ TEMPORAIREMENT POUR DÉBUGGER LA VISIBILITÉ
+      // const featureCards = document.querySelectorAll('.feature-card')
       
-      if (featureCards.length > 0) {
-        // Réinitialiser les styles pour s'assurer que les cartes sont dans le bon état initial
-        gsap.set('.feature-card', {
-          opacity: 0,
-          y: 50
-        })
+      // if (featureCards.length > 0) {
+      //   // Réinitialiser les styles pour s'assurer que les cartes sont dans le bon état initial
+      //   gsap.set('.feature-card', {
+      //     opacity: 0,
+      //     y: 50
+      //   })
         
-        // Créer l'animation
-        gsap.to('.feature-card', {
-          y: 0,
-          opacity: 1,
-          duration: 0.8,
-          stagger: 0.1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.features-grid',
-            start: 'top bottom',
-            end: 'bottom top',
-            toggleActions: 'play none none reverse'
-          }
-        })
-      }
+      //   // Créer l'animation
+      //   gsap.to('.feature-card', {
+      //     y: 0,
+      //     opacity: 1,
+      //     duration: 0.8,
+      //     stagger: 0.1,
+      //     ease: 'power3.out',
+      //     scrollTrigger: {
+      //       trigger: '.features-grid',
+      //       start: 'top bottom',
+      //       end: 'bottom top',
+      //       toggleActions: 'play none none reverse'
+      //     }
+      //   })
+      // }
 
       // Timeline dots animation - commented out as elements don't exist
       // gsap.from('.timeline-dot', {
@@ -137,7 +137,7 @@ export default function KapNumeriquePremium() {
       {/* Grid pattern overlay */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]" />
 
-      <div className="relative z-10 container mx-auto px-4 pt-32 pb-20">
+      <div className="relative z-10 container mx-auto px-4 pt-32 pb-20" style={{ isolation: 'isolate' }}>
         {/* Hero Statement */}
         <div ref={heroRef} className="text-center mb-24">
           <div className="flex flex-wrap justify-center items-center gap-4 mb-8">
@@ -370,10 +370,10 @@ export default function KapNumeriquePremium() {
           </div>
         </div>
 
-        {/* Premium Features Grid */}
-        <div className="features-grid relative z-30">
+        {/* Premium Features Grid - Z-INDEX FORCÉ POUR VISIBILITÉ */}
+        <div className="features-grid relative" style={{ zIndex: 50 }}>
           <div className="grid md:grid-cols-3 gap-8 mb-32">
-            <h2 className="col-span-full text-4xl font-display text-center mb-12 text-gray-900 relative z-30">
+            <h2 className="col-span-full text-4xl font-display text-center mb-12 text-gray-900" style={{ position: 'relative', zIndex: 50 }}>
               POURQUOI NOUS SOMMES DIFFÉRENTS
             </h2>
           {[
@@ -382,32 +382,50 @@ export default function KapNumeriquePremium() {
               title: "VITESSE ÉCLAIR",
               subtitle: "En ligne en 48h",
               description: "Site en ligne en 48h. Les autres? 3 semaines de templates.",
-              accent: "text-yellow-500"
+              accent: "text-yellow-500",
+              bgAccent: "bg-yellow-50"
             },
             {
               icon: Shield,
               title: "GARANTIE TOTALE",
               subtitle: "100% ou remboursé",
               description: "Satisfait ou remboursé. Site premium garanti. Zéro risque.",
-              accent: "text-green-500"
+              accent: "text-green-500",
+              bgAccent: "bg-green-50"
             },
             {
               icon: Crown,
               title: "SERVICE PREMIUM",
               subtitle: "Expert dédié",
               description: "Un expert qui connaît votre dossier par cœur. Pas 15 interlocuteurs.",
-              accent: "text-purple-500"
+              accent: "text-purple-500",
+              bgAccent: "bg-purple-50"
             }
           ].map((feature, i) => (
             <div 
               key={i}
-              className="feature-card bg-white rounded-2xl p-8 shadow-2xl hover:shadow-3xl transition-all duration-300 border-2 border-gray-200 cursor-pointer opacity-100 relative"
-              style={{ opacity: 1, transform: 'translateY(0)', position: 'relative', zIndex: 30, boxShadow: '0 20px 40px rgba(0,0,0,0.15)' }}
+              className={`feature-card ${feature.bgAccent} rounded-2xl p-8 border-4 border-gray-800 cursor-pointer transform hover:scale-105 transition-all duration-300`}
+              style={{ 
+                opacity: 1, 
+                visibility: 'visible',
+                transform: 'translateY(0) translateZ(0)', 
+                position: 'relative', 
+                zIndex: 100 + i,
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+                backgroundColor: 'white',
+                isolation: 'isolate'
+              }}
             >
-              <feature.icon className={`w-12 h-12 ${feature.accent} mb-4`} />
-              <h4 className="text-xl font-bold text-gray-900 mb-1">{feature.title}</h4>
-              <p className="text-sm text-gray-600 font-semibold mb-3">{feature.subtitle}</p>
-              <p className="text-base font-bold text-gray-900">{feature.description}</p>
+              <feature.icon className={`w-16 h-16 ${feature.accent} mb-4`} style={{ filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))' }} />
+              <h4 className="text-2xl font-extrabold text-gray-900 mb-2" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.1)' }}>
+                {feature.title}
+              </h4>
+              <p className="text-lg text-gray-700 font-bold mb-3">
+                {feature.subtitle}
+              </p>
+              <p className="text-base font-semibold text-gray-800 leading-relaxed">
+                {feature.description}
+              </p>
             </div>
           ))}
         </div>
