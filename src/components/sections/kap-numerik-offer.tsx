@@ -1,236 +1,609 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { Check, Euro, Globe, Lock, Smartphone, BookOpen, Headphones, Calendar, Shield, CreditCard } from 'lucide-react'
-import { Card, CardContent } from '@/components/ui/card'
+import { useState, useEffect, useRef } from 'react'
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { Check, Euro, Globe, Lock, Smartphone, BookOpen, Headphones, Calendar, Shield, CreditCard, Zap, Crown, ChevronRight, Sparkles, X } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 
+// Register GSAP plugins
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger)
+}
+
 const features = [
   {
-    icon: <Globe className="w-6 h-6" />,
+    icon: Globe,
     title: "Site vitrine clé en main",
-    description: "Accueil, À propos, Services, Galerie, Contact, Mentions légales, Politique de confidentialité"
+    description: "Design professionnel et moderne",
+    highlight: "COMPLET"
   },
   {
-    icon: <Smartphone className="w-6 h-6" />,
-    title: "Design responsive professionnel",
-    description: "Compatible ordinateur, tablette et mobile pour toucher tous vos clients"
+    icon: Smartphone,
+    title: "Design responsive premium",
+    description: "Pixel-perfect sur tous les écrans",
+    highlight: "100%"
   },
   {
-    icon: <Check className="w-6 h-6" />,
-    title: "Formulaire de contact intelligent",
-    description: "Recevez les demandes de vos visiteurs directement par email"
+    icon: Zap,
+    title: "Performance maximale",
+    description: "Score 90+ garanti",
+    highlight: "RAPIDE"
   },
   {
-    icon: <Shield className="w-6 h-6" />,
-    title: "SEO de base inclus",
-    description: "Titres optimisés, sitemap, indexation Google pour être visible"
+    icon: Shield,
+    title: "SEO & Sécurité intégrés",
+    description: "1ère page Google visée",
+    highlight: "TOP"
   },
   {
-    icon: <BookOpen className="w-6 h-6" />,
-    title: "Formation à la prise en main",
-    description: "PDF ou tutoriel vidéo fournis pour gérer votre site en autonomie"
+    icon: BookOpen,
+    title: "Formation VIP incluse",
+    description: "Maîtrisez votre site à 100%",
+    highlight: "OFFERT"
   },
   {
-    icon: <Headphones className="w-6 h-6" />,
-    title: "Support technique 30 jours",
-    description: "Assistance garantie pendant 1 mois après la mise en ligne"
+    icon: Headphones,
+    title: "Support premium 90 jours",
+    description: "Ligne directe avec nos experts",
+    highlight: "EXCLUSIF"
   },
   {
-    icon: <Globe className="w-6 h-6" />,
-    title: "Nom de domaine + hébergement",
-    description: "Sécurisé et inclus pour 12 mois, sans frais cachés"
+    icon: Globe,
+    title: "Hébergement professionnel",
+    description: "12 mois offerts, SSL inclus",
+    highlight: "GRATUIT"
   },
   {
-    icon: <Lock className="w-6 h-6" />,
-    title: "Conformité RGPD intégrée",
-    description: "Politique de confidentialité et gestion des cookies conforme"
+    icon: Lock,
+    title: "Conformité totale",
+    description: "RGPD, mentions légales, tout",
+    highlight: "CERTIFIÉ"
   }
 ]
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
-}
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.5
-    }
-  }
-}
-
 export default function KapNumerikOfferSection() {
-  return (
-    <section id="offre-kap-numerik" className="py-20 bg-gradient-to-b from-primary-50 to-white relative overflow-hidden">
-      {/* Background decorations */}
-      <div className="absolute top-10 left-10 w-72 h-72 bg-primary-200/20 rounded-full blur-3xl" />
-      <div className="absolute bottom-10 right-10 w-96 h-96 bg-accent-200/20 rounded-full blur-3xl" />
+  const sectionRef = useRef<HTMLElement>(null)
+  const priceRef = useRef<HTMLDivElement>(null)
+  const [isVisible, setIsVisible] = useState(false)
+  const [companyType, setCompanyType] = useState('')
+  const [employees, setEmployees] = useState('')
+  const [revenue, setRevenue] = useState('')
+  const [location, setLocation] = useState('')
+  const [showResult, setShowResult] = useState(false)
+  
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  })
+  
+  const parallaxY = useTransform(scrollYProgress, [0, 1], ['0%', '-20%'])
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1, 0.8])
+
+  // Vérification d'éligibilité
+  const checkEligibility = () => {
+    const emp = parseInt(employees)
+    const rev = parseInt(revenue)
+    
+    // Vérification des critères
+    if (location !== 'reunion') return { eligible: false, reason: "Vous devez être domicilié à La Réunion" }
+    
+    if (companyType === 'entreprise') {
+      if (emp >= 20) return { eligible: false, reason: "Les entreprises doivent avoir moins de 20 salariés" }
+      if (emp < 10 && rev > 500000) return { eligible: false, reason: "Pour les entreprises de moins de 10 salariés, le CA doit être inférieur à 500 000€" }
+      if (emp >= 10 && emp < 20 && rev > 1000000) return { eligible: false, reason: "Pour les entreprises de 10-19 salariés, le CA doit être inférieur à 1 000 000€" }
+      return { eligible: true, percentage: emp < 10 ? 80 : 50, max: emp < 10 ? 1200 : 1200 }
+    }
+    
+    if (companyType === 'association') {
+      if (emp >= 10) return { eligible: false, reason: "Les associations doivent avoir moins de 10 salariés" }
+      return { eligible: true, percentage: 80, max: 1200 }
+    }
+    
+    if (companyType === 'profession-liberale') {
+      if (rev > 500000) return { eligible: false, reason: "Les professions libérales doivent avoir un CA inférieur à 500 000€" }
+      return { eligible: true, percentage: 80, max: 1200 }
+    }
+    
+    return { eligible: false, reason: "Veuillez remplir tous les champs" }
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    setShowResult(true)
+  }
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Epic price reveal animation
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: priceRef.current,
+          start: 'top 80%',
+          end: 'bottom 20%',
+          onEnter: () => setIsVisible(true),
+          onLeaveBack: () => setIsVisible(false)
+        }
+      })
       
-      <div className="container mx-auto px-4 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+      // Feature cards 3D effect
+      gsap.utils.toArray('.premium-feature').forEach((card, i) => {
+        gsap.fromTo(card as Element,
+          { 
+            rotationY: -15,
+            z: -50,
+            opacity: 0,
+            scale: 0.9
+          },
+          {
+            rotationY: 0,
+            z: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 1,
+            delay: i * 0.1,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: card as Element,
+              start: 'top 85%'
+            }
+          }
+        )
+      })
+
+      // Floating elements
+      gsap.to('.float-element', {
+        y: 20,
+        duration: 3,
+        ease: 'power1.inOut',
+        yoyo: true,
+        repeat: -1,
+        stagger: 0.5
+      })
+
+    }, sectionRef)
+
+    return () => ctx.revert()
+  }, [])
+
+  return (
+    <section 
+      ref={sectionRef}
+      className="relative py-32 bg-black overflow-hidden"
+    >
+      {/* Animated background */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-primary-900/20 to-black" />
+        <motion.div 
+          className="absolute inset-0 opacity-20"
+          style={{ y: parallaxY }}
         >
-          <Badge className="mb-4 bg-gradient-primary text-white border-0 px-4 py-2 text-sm">
-            Offre Spéciale Kap Numérik
-          </Badge>
+          <div className="absolute top-20 left-20 w-96 h-96 bg-primary-500 rounded-full blur-[100px] float-element" />
+          <div className="absolute bottom-20 right-20 w-96 h-96 bg-accent-500 rounded-full blur-[100px] float-element" />
+          <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-secondary-500 rounded-full blur-[100px] float-element" />
+        </motion.div>
+        
+        {/* Grid pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#8B143120_1px,transparent_1px),linear-gradient(to_bottom,#8B143120_1px,transparent_1px)] bg-[size:20px_20px]" />
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10">
+        {/* Header */}
+        <div className="text-center mb-20">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-8"
+          >
+            <Badge className="bg-gradient-to-r from-primary-600 to-primary-700 text-white border-0 px-6 py-3 text-lg font-semibold">
+              <Shield className="w-5 h-5 mr-2" />
+              SUBVENTION D'ÉTAT KAP NUMÉRIK
+            </Badge>
+          </motion.div>
+
+          <motion.h2 
+            className="text-6xl md:text-8xl font-display font-bold mb-8"
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+          >
+            <span className="text-white">VOTRE SITE PRO</span>
+            <br />
+            <span className="bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">
+              FINANCÉ À 80%
+            </span>
+          </motion.h2>
           
-          <h2 className="text-4xl md:text-5xl font-display font-bold mb-6 bg-gradient-primary bg-clip-text text-transparent">
-            Création d'un site Internet vitrine
-          </h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="text-xl text-gray-300 max-w-3xl mx-auto"
+          >
+            Programme officiel de la Région Réunion et de l'Union Européenne pour accompagner 
+            la transformation numérique de votre entreprise
+          </motion.p>
+        </div>
+
+        {/* Epic Price Reveal */}
+        <div ref={priceRef} className="mb-32">
+          <AnimatePresence>
+            {isVisible && (
+              <motion.div
+                initial={{ scale: 0, rotateY: 180 }}
+                animate={{ scale: 1, rotateY: 0 }}
+                transition={{ duration: 1, type: "spring", bounce: 0.4 }}
+                className="relative max-w-4xl mx-auto"
+              >
+                {/* Price card with 3D effect */}
+                <motion.div 
+                  className="relative bg-gradient-to-br from-gold-500 via-gold-400 to-gold-600 rounded-3xl p-12 shadow-2xl"
+                  style={{ transformStyle: 'preserve-3d', scale }}
+                  whileHover={{ 
+                    rotateY: 5,
+                    rotateX: -5,
+                    transition: { duration: 0.3 }
+                  }}
+                >
+                  {/* Shine effect */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/30 to-transparent rounded-3xl animate-shimmer" />
+                  
+                  {/* Content */}
+                  <div className="relative z-10 text-center">
+                    <div className="flex items-center justify-center gap-2 mb-4">
+                      <Crown className="w-10 h-10 text-black" />
+                      <h3 className="text-3xl font-display text-black uppercase tracking-wider">
+                        Subvention Kap Numérik
+                      </h3>
+                      <Crown className="w-10 h-10 text-black" />
+                    </div>
+                    
+                    <div className="mb-6">
+                      <motion.div 
+                        className="text-8xl md:text-9xl font-display font-black text-black leading-none"
+                        animate={{ scale: [1, 1.05, 1] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      >
+                        1 200€
+                      </motion.div>
+                      <div className="text-3xl font-bold text-black/80">REMBOURSÉS</div>
+                    </div>
+                    
+                    <div className="bg-black/90 text-white rounded-2xl p-6">
+                      <p className="text-2xl font-semibold mb-2">
+                        Soit seulement 300€ de votre poche
+                      </p>
+                      <p className="text-lg opacity-90">
+                        Pour un site professionnel d'une valeur de 1 500€
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* 3D shadow */}
+                  <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-[90%] h-20 bg-black/20 rounded-full blur-xl" />
+                </motion.div>
+
+                {/* Floating badges */}
+                <motion.div
+                  className="absolute -top-8 -left-8 bg-primary-600 text-white rounded-full p-4 shadow-lg"
+                  animate={{ y: [0, -10, 0], rotate: [0, 5, 0] }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                >
+                  <Euro className="w-8 h-8" />
+                  <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-primary-600 text-white px-3 py-1 rounded-full text-sm whitespace-nowrap">
+                    SUBVENTION
+                  </span>
+                </motion.div>
+
+                <motion.div
+                  className="absolute -top-8 -right-8 bg-green-600 text-white rounded-full p-4 shadow-lg"
+                  animate={{ y: [0, -10, 0], rotate: [0, -5, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, delay: 1.5 }}
+                >
+                  <Check className="w-8 h-8" />
+                  <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-3 py-1 rounded-full text-sm whitespace-nowrap">
+                    ÉLIGIBLE
+                  </span>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Premium Features Grid */}
+        <div className="mb-32">
+          <motion.h3 
+            className="text-5xl md:text-6xl font-display text-center mb-16 text-white"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            TOUT EST <span className="text-accent-400">INCLUS</span>
+          </motion.h3>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {features.map((feature, index) => (
+              <motion.div
+                key={index}
+                className="premium-feature relative"
+                style={{ perspective: '1000px' }}
+              >
+                <div className="group h-full bg-gradient-to-br from-gray-900 to-black border border-primary-500/30 rounded-2xl p-6 hover:border-primary-400 transition-all duration-300 transform hover:scale-105">
+                  {/* Highlight badge */}
+                  <div className="absolute -top-3 -right-3 bg-gradient-to-r from-accent-500 to-accent-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                    {feature.highlight}
+                  </div>
+                  
+                  {/* Icon container */}
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary-500/20 to-accent-500/20 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <feature.icon className="w-8 h-8 text-primary-400" />
+                  </div>
+                  
+                  <h4 className="text-xl font-bold text-white mb-2">{feature.title}</h4>
+                  <p className="text-gray-400">{feature.description}</p>
+                  
+                  {/* Hover glow effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary-500/0 to-accent-500/0 group-hover:from-primary-500/10 group-hover:to-accent-500/10 rounded-2xl transition-all duration-300" />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* Interactive Eligibility Checker */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          className="mb-20"
+        >
+          <h3 className="text-4xl md:text-5xl font-display text-white mb-4 text-center">
+            ÊTES-VOUS ÉLIGIBLE ?
+          </h3>
+          <p className="text-xl text-gray-400 text-center mb-12 max-w-2xl mx-auto">
+            Vérifiez en quelques secondes si votre structure peut bénéficier de la subvention Kap Numérik
+          </p>
           
-          <div className="max-w-3xl mx-auto">
-            <motion.div 
-              className="bg-gradient-accent text-white p-6 rounded-2xl shadow-accent-lg mb-8 transform hover:scale-105 transition-transform duration-300"
-              whileHover={{ y: -5 }}
+          {/* Formulaire d'éligibilité */}
+          <div className="max-w-2xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="bg-gradient-to-br from-gray-900 to-black rounded-3xl p-8 border border-primary-500/30"
             >
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <Euro className="w-8 h-8" />
-                <span className="text-3xl font-bold">Jusqu'à 1 200€ remboursés</span>
-              </div>
-              <p className="text-xl">
-                Grâce au dispositif Kap Numérik de la Région Réunion
-              </p>
-              <p className="text-lg opacity-90 mt-2">
-                (80% du montant pris en charge)
-              </p>
+              {!showResult ? (
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Type de structure */}
+                  <div>
+                    <label className="text-sm text-gray-400 mb-3 block">Type de structure</label>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      {[
+                        { value: 'entreprise', label: 'Entreprise', icon: Globe },
+                        { value: 'association', label: 'Association', icon: Shield },
+                        { value: 'profession-liberale', label: 'Profession libérale', icon: BookOpen }
+                      ].map((type) => (
+                        <button
+                          key={type.value}
+                          type="button"
+                          onClick={() => setCompanyType(type.value)}
+                          className={`p-4 rounded-xl border-2 transition-all ${
+                            companyType === type.value
+                              ? 'border-primary-500 bg-primary-500/20 text-white'
+                              : 'border-gray-700 text-gray-400 hover:border-gray-600'
+                          }`}
+                        >
+                          <type.icon className="w-6 h-6 mx-auto mb-2" />
+                          <div className="text-sm font-medium">{type.label}</div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Nombre de salariés */}
+                  <div>
+                    <label className="text-sm text-gray-400 mb-3 block">Nombre de salariés</label>
+                    <input
+                      type="number"
+                      value={employees}
+                      onChange={(e) => setEmployees(e.target.value)}
+                      placeholder="Ex: 5"
+                      className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:border-primary-500 focus:outline-none"
+                      required
+                    />
+                  </div>
+
+                  {/* Chiffre d'affaires */}
+                  <div>
+                    <label className="text-sm text-gray-400 mb-3 block">Chiffre d'affaires annuel (€)</label>
+                    <input
+                      type="number"
+                      value={revenue}
+                      onChange={(e) => setRevenue(e.target.value)}
+                      placeholder="Ex: 250000"
+                      className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:border-primary-500 focus:outline-none"
+                      required
+                    />
+                  </div>
+
+                  {/* Localisation */}
+                  <div>
+                    <label className="text-sm text-gray-400 mb-3 block">Siège social</label>
+                    <select
+                      value={location}
+                      onChange={(e) => setLocation(e.target.value)}
+                      className="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl text-white focus:border-primary-500 focus:outline-none"
+                      required
+                    >
+                      <option value="">Sélectionnez...</option>
+                      <option value="reunion">La Réunion</option>
+                      <option value="metropole">Métropole</option>
+                      <option value="autre">Autre DOM-TOM</option>
+                    </select>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="w-full bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white"
+                  >
+                    Vérifier mon éligibilité
+                  </Button>
+                </form>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="text-center py-8"
+                >
+                  {checkEligibility().eligible ? (
+                    <>
+                      <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <Check className="w-10 h-10 text-green-500" />
+                      </div>
+                      <h4 className="text-3xl font-bold text-green-500 mb-4">Félicitations ! Vous êtes éligible</h4>
+                      <div className="bg-green-900/20 rounded-2xl p-6 mb-6 border border-green-500/30">
+                        <p className="text-xl text-white mb-2">
+                          Votre site web sera subventionné à <span className="font-bold text-green-400">{checkEligibility().percentage}%</span>
+                        </p>
+                        <p className="text-lg text-gray-300">
+                          Jusqu'à <span className="font-bold text-green-400">{checkEligibility().max}€</span> de subvention
+                        </p>
+                      </div>
+                      <p className="text-gray-400 mb-8">
+                        Soit seulement <span className="text-xl font-bold text-accent-400">{1500 - checkEligibility().max}€</span> à votre charge pour un site professionnel complet
+                      </p>
+                      <div className="flex gap-4 justify-center">
+                        <Button
+                          onClick={() => setShowResult(false)}
+                          variant="outline"
+                          className="border-gray-700 text-gray-400 hover:text-white"
+                        >
+                          Refaire le test
+                        </Button>
+                        <Button asChild className="bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700">
+                          <Link href="#contact">
+                            Demander un devis gratuit
+                          </Link>
+                        </Button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="w-20 h-20 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <X className="w-10 h-10 text-red-500" />
+                      </div>
+                      <h4 className="text-3xl font-bold text-red-500 mb-4">Désolé, vous n'êtes pas éligible</h4>
+                      <p className="text-lg text-gray-300 mb-8">{checkEligibility().reason}</p>
+                      <div className="flex gap-4 justify-center">
+                        <Button
+                          onClick={() => setShowResult(false)}
+                          variant="outline"
+                          className="border-gray-700 text-gray-400 hover:text-white"
+                        >
+                          Refaire le test
+                        </Button>
+                        <Button asChild className="bg-gradient-to-r from-primary-500 to-primary-600">
+                          <Link href="#contact">
+                            Voir nos autres offres
+                          </Link>
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                </motion.div>
+              )}
             </motion.div>
-            
-            <p className="text-xl text-gray-700 font-medium">
-              Une solution complète et professionnelle pour digitaliser votre entreprise
-            </p>
           </div>
         </motion.div>
 
-        {/* Features Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16"
-        >
-          {features.map((feature, index) => (
-            <motion.div key={index} variants={itemVariants}>
-              <Card className="h-full hover:shadow-lg transition-all duration-300 border-gray-100 group hover:border-primary-200">
-                <CardContent className="p-6">
-                  <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary transition-colors duration-300">
-                    <div className="text-primary group-hover:text-white transition-colors duration-300">
-                      {feature.icon}
-                    </div>
-                  </div>
-                  <h3 className="font-semibold text-lg mb-2 text-gray-900">{feature.title}</h3>
-                  <p className="text-gray-600 text-sm">{feature.description}</p>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* Compliance Section */}
+        {/* Compliance Section Premium */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="bg-white rounded-2xl shadow-xl p-8 mb-12"
+          className="bg-gradient-to-br from-primary-900/50 to-secondary-900/50 backdrop-blur-sm rounded-3xl p-8 md:p-12 mb-20 border border-primary-500/30"
         >
-          <div className="flex items-center gap-3 mb-6">
-            <Lock className="w-8 h-8 text-primary" />
-            <h3 className="text-2xl font-bold text-gray-900">
-              Conformité totale avec les exigences Kap Numérik
+          <div className="flex items-center gap-4 mb-8">
+            <Shield className="w-12 h-12 text-primary-400" />
+            <h3 className="text-3xl font-display text-white">
+              100% CONFORME AUX EXIGENCES
             </h3>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="flex items-start gap-3">
-              <Check className="w-5 h-5 text-green-600 flex-shrink-0 mt-1" />
-              <div>
-                <h4 className="font-semibold mb-1">Mentions légales obligatoires</h4>
-                <p className="text-sm text-gray-600">Selon la loi pour la confiance dans l'économie numérique</p>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                title: "Mentions légales",
+                desc: "Conformité LCEN garantie",
+                icon: "✅"
+              },
+              {
+                title: "RGPD intégré", 
+                desc: "Protection des données",
+                icon: "🔒"
+              },
+              {
+                title: "Logos officiels",
+                desc: "Région + Europe inclus",
+                icon: "🇪🇺"
+              }
+            ].map((item, i) => (
+              <div key={i} className="flex items-start gap-4">
+                <div className="text-3xl">{item.icon}</div>
+                <div>
+                  <h4 className="text-xl font-bold text-white mb-1">{item.title}</h4>
+                  <p className="text-gray-400">{item.desc}</p>
+                </div>
               </div>
-            </div>
-            
-            <div className="flex items-start gap-3">
-              <Check className="w-5 h-5 text-green-600 flex-shrink-0 mt-1" />
-              <div>
-                <h4 className="font-semibold mb-1">RGPD intégré</h4>
-                <p className="text-sm text-gray-600">Politique de confidentialité + bandeau cookies complet</p>
-              </div>
-            </div>
-            
-            <div className="flex items-start gap-3">
-              <Check className="w-5 h-5 text-green-600 flex-shrink-0 mt-1" />
-              <div>
-                <h4 className="font-semibold mb-1">Logos officiels</h4>
-                <p className="text-sm text-gray-600">Région Réunion + Union Européenne intégrés</p>
-              </div>
-            </div>
+            ))}
           </div>
           
-          <div className="mt-6 p-4 bg-secondary-50 rounded-lg border border-secondary-200">
-            <p className="text-sm text-secondary-700 italic text-center">
+          <div className="mt-8 p-6 bg-black/50 rounded-2xl border border-secondary-500/30">
+            <p className="text-lg text-secondary-400 italic text-center">
               « Ce site a été cofinancé par l'Union Européenne »
             </p>
-            <p className="text-xs text-secondary-600 text-center mt-1">
-              Mention obligatoire intégrée dans le footer de votre site
+            <p className="text-sm text-secondary-500 text-center mt-2">
+              Mention automatiquement intégrée dans votre footer
             </p>
           </div>
         </motion.div>
 
-        {/* CTA Section */}
+        {/* Final CTA Section */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
           className="text-center"
         >
-          <div className="bg-gradient-to-r from-accent-50 to-accent-100 rounded-2xl p-8 mb-8">
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <Calendar className="w-6 h-6 text-accent-700" />
-              <p className="text-lg font-semibold text-accent-800">
-                Offre limitée dans le temps
-              </p>
-            </div>
-            <p className="text-gray-700 mb-6 max-w-2xl mx-auto">
-              Le dispositif Kap Numérik est soumis à des plafonds budgétaires. 
-              Ne manquez pas cette opportunité de digitaliser votre entreprise avec 80% de remboursement !
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="bg-gradient-primary hover:bg-gradient-primary-reverse text-white shadow-primary-lg transition-all duration-300">
-                <Link href="#contact">
-                  <CreditCard className="w-5 h-5 mr-2" />
-                  Demander un devis gratuit
+          <h3 className="text-4xl md:text-6xl font-display text-white mb-8">
+            DÉMARREZ VOTRE <span className="text-accent-400">TRANSFORMATION NUMÉRIQUE</span>
+          </h3>
+          
+          <p className="text-xl text-gray-400 mb-12 max-w-2xl mx-auto">
+            Profitez de cette opportunité offerte par la Région Réunion et l'Union Européenne 
+            pour digitaliser votre entreprise.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-6 justify-center mb-8">
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button asChild size="lg" className="bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white text-xl px-12 py-8 rounded-full shadow-2xl shadow-accent-500/25">
+                <Link href="#contact" className="flex items-center gap-3">
+                  <Sparkles className="w-6 h-6" />
+                  DEMANDER UN DEVIS GRATUIT
+                  <ChevronRight className="w-6 h-6" />
                 </Link>
               </Button>
-              
-              <Button asChild size="lg" variant="outline" className="border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300">
-                <Link href="#faq">
-                  En savoir plus sur Kap Numérik
-                </Link>
-              </Button>
-            </div>
+            </motion.div>
           </div>
           
           <p className="text-sm text-gray-500">
-            * Sous réserve d'éligibilité et dans la limite des fonds disponibles
+            Étude de votre éligibilité • Accompagnement complet • Paiement après versement de la subvention
           </p>
         </motion.div>
       </div>

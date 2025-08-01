@@ -3,7 +3,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { Send, Sparkles, FileText, Zap } from 'lucide-react'
-import AutomatedForm from './automated-form'
+// import AutomatedFormSimple from './automated-form-simple'
 
 const InteractivitySection = () => {
 
@@ -89,7 +89,56 @@ const InteractivitySection = () => {
                 </div>
               </div>
 
-              <AutomatedForm />
+              {/* Formulaire temporairement désactivé */}
+              <div className="bg-gradient-to-br from-primary-50 to-accent-50 rounded-2xl p-8 shadow-xl">
+                <form className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Votre nom
+                    </label>
+                    <input
+                      type="text"
+                      className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                      placeholder="Jean Dupont"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Email professionnel
+                    </label>
+                    <input
+                      type="email"
+                      className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                      placeholder="contact@entreprise.re"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Type de projet
+                    </label>
+                    <select className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200">
+                      <option>Site vitrine</option>
+                      <option>E-commerce</option>
+                      <option>Application web</option>
+                      <option>Refonte de site</option>
+                    </select>
+                  </div>
+                  
+                  <button
+                    type="submit"
+                    className="w-full bg-gradient-primary hover:bg-gradient-primary-reverse text-white font-medium py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 shadow-primary"
+                  >
+                    <Send className="w-5 h-5" />
+                    Recevoir un devis gratuit
+                  </button>
+                </form>
+                
+                <p className="text-xs text-gray-500 mt-4 text-center">
+                  Réponse garantie en moins de 24h
+                </p>
+              </div>
             </div>
           </motion.div>
         </div>
