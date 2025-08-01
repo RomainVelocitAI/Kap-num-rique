@@ -481,8 +481,8 @@ export default function KapNumeriquePremium() {
             <div className="mt-20 bg-gradient-to-r from-gray-900 to-black rounded-3xl p-8 md:p-12">
               <div className="grid md:grid-cols-4 gap-8 text-center">
                 <div>
-                  <div className="text-5xl font-display font-black text-primary-400 mb-2">1200€</div>
-                  <p className="text-gray-400">Subvention Kap Numérik</p>
+                  <div className="text-5xl font-display font-black text-primary-400 mb-2">100%</div>
+                  <p className="text-gray-400">Conforme Kap Numérik</p>
                 </div>
                 <div>
                   <div className="text-5xl font-display font-black text-red-400 mb-2">100%</div>
