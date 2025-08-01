@@ -358,7 +358,10 @@ export default function KapNumeriquePremium() {
         </div>
 
         {/* Premium Features Grid */}
-        <div className="features-grid grid md:grid-cols-3 gap-8 mb-32">
+        <div className="features-grid grid md:grid-cols-3 gap-8 mb-32 bg-gray-100 p-12 rounded-3xl">
+          <h2 className="col-span-full text-4xl font-display text-center mb-12 text-gray-900">
+            POURQUOI NOUS SOMMES DIFFÉRENTS
+          </h2>
           {[
             {
               icon: Zap,
@@ -386,6 +389,10 @@ export default function KapNumeriquePremium() {
               key={i}
               className="feature-card bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100"
               whileHover={{ y: -5 }}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
             >
               <feature.icon className={`w-12 h-12 ${feature.accent} mb-4`} />
               <h4 className="text-xl font-bold text-gray-900 mb-1">{feature.title}</h4>
