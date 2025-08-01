@@ -65,15 +65,15 @@ export default function Home() {
           }}
         >
           <KapNumeriquePremium />
-          <InteractivitySection />
           <Suspense fallback={
             <div className="min-h-[400px] bg-black flex items-center justify-center">
               <div className="text-white text-2xl">Chargement...</div>
             </div>
           }>
-            <TechnicalShowcase />
             <VisualEngagementSection />
+            <TechnicalShowcase />
           </Suspense>
+          <InteractivitySection />
           <KapNumerikOfferSection />
         </div>
       </main>
