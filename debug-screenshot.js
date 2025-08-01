@@ -14,22 +14,33 @@ const { chromium } = require('playwright');
   await page.screenshot({ path: 'full-page-screenshot.png', fullPage: true });
   console.log('Full page screenshot saved as full-page-screenshot.png');
   
-  // Scroll to the premium section
-  const premiumSection = await page.$('.features-grid');
-  if (premiumSection) {
-    await premiumSection.scrollIntoViewIfNeeded();
+  // Scroll to the difference section
+  const diffSection = await page.$('text=LA DIFFÉRENCE DIGIQO');
+  if (diffSection) {
+    await diffSection.scrollIntoViewIfNeeded();
     await page.waitForTimeout(1000);
-    await page.screenshot({ path: 'premium-section-screenshot.png' });
-    console.log('Premium section screenshot saved as premium-section-screenshot.png');
+    
+    // Take a screenshot of the whole section
+    const sectionElement = await diffSection.evaluateHandle(el => {
+      // Find the parent section containing all the cards
+      let parent = el;
+      while (parent && !parent.classList.contains('py-24')) {
+        parent = parent.parentElement;
+      }
+      return parent || el;
+    });
+    
+    await page.screenshot({ path: 'difference-section-screenshot.png' });
+    console.log('Difference section screenshot saved as difference-section-screenshot.png');
     
     // Get the position and visibility of the element
-    const boundingBox = await premiumSection.boundingBox();
-    console.log('Premium section bounding box:', boundingBox);
+    const boundingBox = await sectionElement.boundingBox();
+    console.log('Difference section bounding box:', boundingBox);
     
-    const isVisible = await premiumSection.isVisible();
-    console.log('Premium section is visible:', isVisible);
+    const isVisible = await sectionElement.isVisible();
+    console.log('Difference section is visible:', isVisible);
   } else {
-    console.log('Premium section not found!');
+    console.log('Difference section not found!');
   }
   
   await browser.close();

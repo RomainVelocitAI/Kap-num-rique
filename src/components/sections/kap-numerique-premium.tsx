@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { ChevronRight, TrendingUp, Shield, Clock, Award, Check, X, Zap, Crown, Rocket } from 'lucide-react'
+import { ChevronRight, TrendingUp, Shield, Clock, Award, Check, X, Zap, Crown, Rocket, Headphones } from 'lucide-react'
 
 // Register GSAP plugins
 if (typeof window !== 'undefined') {
@@ -370,65 +370,135 @@ export default function KapNumeriquePremium() {
           </div>
         </div>
 
-        {/* Premium Features Grid - Z-INDEX FORCÉ POUR VISIBILITÉ */}
-        <div className="features-grid relative" style={{ zIndex: 50 }}>
-          <div className="grid md:grid-cols-3 gap-8 mb-32">
-            <h2 className="col-span-full text-4xl font-display text-center mb-12 text-gray-900" style={{ position: 'relative', zIndex: 50 }}>
-              POURQUOI NOUS SOMMES DIFFÉRENTS
-            </h2>
-          {[
-            {
-              icon: Zap,
-              title: "VITESSE ÉCLAIR",
-              subtitle: "En ligne en 48h",
-              description: "Site en ligne en 48h. Les autres? 3 semaines de templates.",
-              accent: "text-yellow-500",
-              bgAccent: "bg-yellow-50"
-            },
-            {
-              icon: Shield,
-              title: "GARANTIE TOTALE",
-              subtitle: "100% ou remboursé",
-              description: "Satisfait ou remboursé. Site premium garanti. Zéro risque.",
-              accent: "text-green-500",
-              bgAccent: "bg-green-50"
-            },
-            {
-              icon: Crown,
-              title: "SERVICE PREMIUM",
-              subtitle: "Expert dédié",
-              description: "Un expert qui connaît votre dossier par cœur. Pas 15 interlocuteurs.",
-              accent: "text-purple-500",
-              bgAccent: "bg-purple-50"
-            }
-          ].map((feature, i) => (
-            <div 
-              key={i}
-              className={`feature-card ${feature.bgAccent} rounded-2xl p-8 border-4 border-gray-800 cursor-pointer transform hover:scale-105 transition-all duration-300`}
-              style={{ 
-                opacity: 1, 
-                visibility: 'visible',
-                transform: 'translateY(0) translateZ(0)', 
-                position: 'relative', 
-                zIndex: 100 + i,
-                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-                backgroundColor: 'white',
-                isolation: 'isolate'
-              }}
-            >
-              <feature.icon className={`w-16 h-16 ${feature.accent} mb-4`} style={{ filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))' }} />
-              <h4 className="text-2xl font-extrabold text-gray-900 mb-2" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.1)' }}>
-                {feature.title}
-              </h4>
-              <p className="text-lg text-gray-700 font-bold mb-3">
-                {feature.subtitle}
-              </p>
-              <p className="text-base font-semibold text-gray-800 leading-relaxed">
-                {feature.description}
+        {/* Notre différence - Section redessinée avec vraies valeurs */}
+        <div className="relative py-24">
+          <div className="max-w-7xl mx-auto">
+            {/* Titre impactant */}
+            <div className="text-center mb-20">
+              <h2 className="text-5xl md:text-7xl font-display font-black mb-6">
+                <span className="text-gray-900">LA DIFFÉRENCE</span>{' '}
+                <span className="bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">DIGIQO</span>
+              </h2>
+              <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto">
+                Nous ne sommes pas une agence web classique. Nous sommes vos partenaires numériques.
               </p>
             </div>
-          ))}
-        </div>
+
+            {/* Grille de valeurs - Design moderne glassmorphism */}
+            <div className="grid lg:grid-cols-3 gap-8">
+              {/* 1. Accompagnement personnalisé */}
+              <div className="group relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary-600 to-primary-700 rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-500" />
+                <div className="relative bg-white/80 backdrop-blur-xl border border-gray-200 rounded-3xl p-8 hover:transform hover:scale-105 transition-all duration-300">
+                  <div className="bg-gradient-to-br from-primary-100 to-primary-200 w-20 h-20 rounded-2xl flex items-center justify-center mb-6">
+                    <Headphones className="w-10 h-10 text-primary-600" strokeWidth={2.5} />
+                  </div>
+                  <h4 className="text-2xl font-bold text-gray-900 mb-4">
+                    Accompagnement sur mesure
+                  </h4>
+                  <p className="text-gray-600 leading-relaxed mb-6">
+                    Un expert dédié qui comprend votre métier et vos besoins spécifiques. Nous parlons votre langage, pas du jargon technique.
+                  </p>
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-primary-600 mt-0.5 flex-shrink-0" />
+                      <span className="text-sm text-gray-700">Interlocuteur unique du début à la fin</span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-primary-600 mt-0.5 flex-shrink-0" />
+                      <span className="text-sm text-gray-700">Disponible 7j/7 pour vos questions</span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-primary-600 mt-0.5 flex-shrink-0" />
+                      <span className="text-sm text-gray-700">Formation personnalisée incluse</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 2. Technologie de pointe */}
+              <div className="group relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-red-600 to-red-700 rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-500" />
+                <div className="relative bg-white/80 backdrop-blur-xl border border-gray-200 rounded-3xl p-8 hover:transform hover:scale-105 transition-all duration-300">
+                  <div className="bg-gradient-to-br from-red-100 to-red-200 w-20 h-20 rounded-2xl flex items-center justify-center mb-6">
+                    <Rocket className="w-10 h-10 text-red-600" strokeWidth={2.5} />
+                  </div>
+                  <h4 className="text-2xl font-bold text-gray-900 mb-4">
+                    Site nouvelle génération
+                  </h4>
+                  <p className="text-gray-600 leading-relaxed mb-6">
+                    Technologies 2025, pas des templates de 2015. Votre site sera rapide, moderne et évolutif pendant des années.
+                  </p>
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
+                      <span className="text-sm text-gray-700">Next.js 15 + React dernière génération</span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
+                      <span className="text-sm text-gray-700">Performance optimale (score 95+)</span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
+                      <span className="text-sm text-gray-700">IA intégrée pour l'assistance client</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 3. ROI Garanti */}
+              <div className="group relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-gold-500 to-gold-600 rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-500" />
+                <div className="relative bg-white/80 backdrop-blur-xl border border-gray-200 rounded-3xl p-8 hover:transform hover:scale-105 transition-all duration-300">
+                  <div className="bg-gradient-to-br from-gold-100 to-gold-200 w-20 h-20 rounded-2xl flex items-center justify-center mb-6">
+                    <TrendingUp className="w-10 h-10 text-gold-600" strokeWidth={2.5} />
+                  </div>
+                  <h4 className="text-2xl font-bold text-gray-900 mb-4">
+                    Résultats mesurables
+                  </h4>
+                  <p className="text-gray-600 leading-relaxed mb-6">
+                    Un site qui génère des leads, pas juste une carte de visite en ligne. Nous optimisons pour la conversion.
+                  </p>
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-gold-600 mt-0.5 flex-shrink-0" />
+                      <span className="text-sm text-gray-700">SEO local optimisé pour La Réunion</span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-gold-600 mt-0.5 flex-shrink-0" />
+                      <span className="text-sm text-gray-700">Tracking & analytics configurés</span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-gold-600 mt-0.5 flex-shrink-0" />
+                      <span className="text-sm text-gray-700">Rapport mensuel de performance</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Stats qui prouvent */}
+            <div className="mt-20 bg-gradient-to-r from-gray-900 to-black rounded-3xl p-8 md:p-12">
+              <div className="grid md:grid-cols-4 gap-8 text-center">
+                <div>
+                  <div className="text-5xl font-display font-black text-primary-400 mb-2">48h</div>
+                  <p className="text-gray-400">Mise en ligne express</p>
+                </div>
+                <div>
+                  <div className="text-5xl font-display font-black text-red-400 mb-2">100%</div>
+                  <p className="text-gray-400">Clients satisfaits</p>
+                </div>
+                <div>
+                  <div className="text-5xl font-display font-black text-gold-400 mb-2">+150%</div>
+                  <p className="text-gray-400">Augmentation du trafic</p>
+                </div>
+                <div>
+                  <div className="text-5xl font-display font-black text-green-400 mb-2">24/7</div>
+                  <p className="text-gray-400">Support disponible</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Final CTA */}
