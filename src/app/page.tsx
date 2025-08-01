@@ -6,6 +6,7 @@ import Header from '../components/layout/Header'
 import HeroClient from '../components/sections/hero-client'
 import KapNumeriquePremium from '../components/sections/kap-numerique-premium'
 import InteractivitySection from '../components/sections/interactivity-section'
+import KapNumerikOfferSection from '../components/sections/kap-numerik-offer'
 
 // Import dynamique des sections qui causent des problèmes
 const TechnicalShowcase = dynamic(
@@ -73,6 +74,7 @@ export default function Home() {
             <VisualEngagementSection />
           </Suspense>
           <InteractivitySection />
+          <KapNumerikOfferSection />
         </div>
       </main>
     </>

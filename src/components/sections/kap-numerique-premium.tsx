@@ -291,7 +291,7 @@ export default function KapNumeriquePremium() {
                         <p className="text-sm text-gold-300">sans vous</p>
                       </div>
                       <p className="font-sans font-bold uppercase text-sm text-gold-400 text-center">
-                        Devis et RDV automatiques
+                        Assistant IA 24/7
                       </p>
                     </div>
 

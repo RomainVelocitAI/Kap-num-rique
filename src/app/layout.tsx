@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter, Playfair_Display, Bebas_Neue } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
 import '../styles/globals.css'
@@ -28,6 +28,13 @@ const bebas = Bebas_Neue({
   fallback: ['Impact', 'sans-serif'],
 })
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+}
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://kap-numerique.re'),
   title: {
@@ -38,12 +45,6 @@ export const metadata: Metadata = {
   keywords: ['kap numérique', 'développement web', 'la réunion', 'site internet', 'aide numérique', 'transformation digitale'],
   authors: [{ name: 'Kap Numérique' }],
   creator: 'Kap Numérique',
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-  },
   openGraph: {
     type: 'website',
     locale: 'fr_FR',
