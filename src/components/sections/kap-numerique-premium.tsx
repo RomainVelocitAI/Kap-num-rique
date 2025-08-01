@@ -371,9 +371,9 @@ export default function KapNumeriquePremium() {
         </div>
 
         {/* Premium Features Grid */}
-        <div className="features-grid relative">
+        <div className="features-grid relative z-30">
           <div className="grid md:grid-cols-3 gap-8 mb-32">
-            <h2 className="col-span-full text-4xl font-display text-center mb-12 text-gray-900">
+            <h2 className="col-span-full text-4xl font-display text-center mb-12 text-gray-900 relative z-30">
               POURQUOI NOUS SOMMES DIFFÉRENTS
             </h2>
           {[
@@ -401,13 +401,13 @@ export default function KapNumeriquePremium() {
           ].map((feature, i) => (
             <div 
               key={i}
-              className="feature-card bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 cursor-pointer opacity-100"
-              style={{ opacity: 1, transform: 'translateY(0)' }}
+              className="feature-card bg-white rounded-2xl p-8 shadow-2xl hover:shadow-3xl transition-all duration-300 border-2 border-gray-200 cursor-pointer opacity-100 relative"
+              style={{ opacity: 1, transform: 'translateY(0)', position: 'relative', zIndex: 30, boxShadow: '0 20px 40px rgba(0,0,0,0.15)' }}
             >
               <feature.icon className={`w-12 h-12 ${feature.accent} mb-4`} />
               <h4 className="text-xl font-bold text-gray-900 mb-1">{feature.title}</h4>
-              <p className="text-sm text-gray-500 mb-3">{feature.subtitle}</p>
-              <p className="text-base font-medium text-gray-800">{feature.description}</p>
+              <p className="text-sm text-gray-600 font-semibold mb-3">{feature.subtitle}</p>
+              <p className="text-base font-bold text-gray-900">{feature.description}</p>
             </div>
           ))}
         </div>
