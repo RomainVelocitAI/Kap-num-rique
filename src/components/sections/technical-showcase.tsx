@@ -200,19 +200,19 @@ export default function TechnicalShowcase() {
 
   const titleComponent = (
     <div className="space-y-6 max-w-4xl mx-auto">
-      <h2 className="text-5xl md:text-7xl font-display font-bold text-white">
+      <h2 className="text-5xl md:text-7xl font-display font-bold text-gray-900">
         X = TECHNIQUE
       </h2>
       <div className="space-y-4">
-        <p className="text-2xl md:text-3xl text-gold-500 font-medium">
+        <p className="text-2xl md:text-3xl text-[#DA6530] font-medium">
           La performance n'est pas une option
         </p>
-        <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
-          <span className="text-red-500 font-bold">53% des visiteurs</span> abandonnent un site qui met plus de 3 secondes à charger.
+        <p className="text-lg md:text-xl text-gray-700 leading-relaxed">
+          <span className="text-[#8B1431] font-bold">53% des visiteurs</span> abandonnent un site qui met plus de 3 secondes à charger.
           Chaque milliseconde compte. Un site rapide, c'est plus de conversions, un meilleur référencement, 
           et des utilisateurs satisfaits.
         </p>
-        <p className="text-lg md:text-xl text-gray-400 italic">
+        <p className="text-lg md:text-xl text-gray-600 italic">
           Analysez les performances de ce site en temps réel ↓
         </p>
       </div>
@@ -222,26 +222,26 @@ export default function TechnicalShowcase() {
   // Éviter les problèmes d'hydratation
   if (!isMounted) {
     return (
-      <section className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-white text-2xl">Chargement...</div>
+      <section className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-gray-700 text-2xl">Chargement...</div>
       </section>
     );
   }
 
   return (
-    <section className="dark min-h-screen bg-black relative" style={{ zIndex: 30 }}>
+    <section className="min-h-screen bg-gradient-to-b from-white to-gray-50 relative" style={{ zIndex: 30 }}>
       <ContainerScroll titleComponent={titleComponent}>
-        <div className="h-full flex flex-col bg-black text-white" style={{ minHeight: '400px' }}>
+        <div className="h-full flex flex-col bg-white text-gray-900 border border-gray-200 rounded-xl shadow-xl" style={{ minHeight: '400px' }}>
           {/* Tabs */}
-          <div className="flex space-x-2 p-4 border-b border-gray-600 bg-gray-900">
+          <div className="flex space-x-2 p-4 border-b border-gray-200 bg-gray-50 rounded-t-xl">
             {['Performance', 'SEO', 'Réseau'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab.toLowerCase())}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                   activeTab === tab.toLowerCase()
-                    ? 'bg-gold-500 text-black'
-                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                    ? 'bg-[#DA6530] text-white'
+                    : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
                 }`}
               >
                 {tab}
@@ -250,13 +250,13 @@ export default function TechnicalShowcase() {
           </div>
 
           {/* Content */}
-          <div className="flex-1 p-6 overflow-y-auto bg-black">
+          <div className="flex-1 p-6 overflow-y-auto bg-white">
             {/* PERFORMANCE TAB */}
             {activeTab === 'performance' && (
               <div className="space-y-6">
-                <div className="text-center mb-8 p-6 bg-gradient-to-r from-gray-900 to-gray-800 rounded-xl border border-gray-700">
-                  <p className="text-lg text-gray-300">
-                    <span className="text-gold-500 font-bold">Amazon</span> perd 1.6 milliard de dollars par an pour chaque seconde de lenteur.
+                <div className="text-center mb-8 p-6 bg-gradient-to-r from-gray-50 to-white rounded-xl border border-gray-200">
+                  <p className="text-lg text-gray-700">
+                    <span className="text-[#DA6530] font-bold">Amazon</span> perd 1.6 milliard de dollars par an pour chaque seconde de lenteur.
                     Votre site mérite la même attention.
                   </p>
                 </div>
@@ -305,9 +305,9 @@ export default function TechnicalShowcase() {
             {/* SEO TAB */}
             {activeTab === 'seo' && (
               <div className="space-y-4">
-                <div className="text-center mb-6 p-5 bg-gradient-to-r from-gray-900 to-gray-800 rounded-xl border border-gray-700">
-                  <p className="text-lg text-gray-300">
-                    <span className="text-gold-500 font-bold">75% du trafic</span> va aux 3 premiers résultats Google.
+                <div className="text-center mb-6 p-5 bg-gradient-to-r from-gray-50 to-white rounded-xl border border-gray-200">
+                  <p className="text-lg text-gray-700">
+                    <span className="text-[#DA6530] font-bold">75% du trafic</span> va aux 3 premiers résultats Google.
                     Un SEO technique parfait, c'est votre ticket d'entrée.
                   </p>
                 </div>
@@ -356,8 +356,8 @@ export default function TechnicalShowcase() {
                                   "Ajoutez og:title, og:description et og:image pour des partages attractifs."}
                 />
                 
-                <div className="mt-6 p-4 bg-gold-500/10 rounded-lg border border-gold-500/20">
-                  <div className="text-gold-500 font-bold text-2xl">
+                <div className="mt-6 p-4 bg-[#DA6530]/10 rounded-lg border border-[#DA6530]/20">
+                  <div className="text-[#DA6530] font-bold text-2xl">
                     Score SEO: {calculateSEOScore(metrics.seoScore)}/100
                   </div>
                 </div>
@@ -367,26 +367,26 @@ export default function TechnicalShowcase() {
             {/* RÉSEAU TAB */}
             {activeTab === 'réseau' && (
               <div className="space-y-6">
-                <div className="text-center mb-6 p-5 bg-gradient-to-r from-gray-900 to-gray-800 rounded-xl border border-gray-700">
-                  <p className="text-lg text-gray-300">
-                    <span className="text-gold-500 font-bold">47% du trafic web</span> est mobile.
+                <div className="text-center mb-6 p-5 bg-gradient-to-r from-gray-50 to-white rounded-xl border border-gray-200">
+                  <p className="text-lg text-gray-700">
+                    <span className="text-[#DA6530] font-bold">47% du trafic web</span> est mobile.
                     La latence et l'optimisation réseau sont cruciales pour vos visiteurs.
                   </p>
                 </div>
-                <div className="bg-gray-800/50 rounded-xl p-6 text-center">
-                  <div className="text-gray-400 text-sm mb-2">Votre position</div>
-                  <div className="text-2xl font-bold text-white">
+                <div className="bg-gray-50 rounded-xl p-6 text-center border border-gray-200">
+                  <div className="text-gray-600 text-sm mb-2">Votre position</div>
+                  <div className="text-2xl font-bold text-gray-900">
                     📍 {metrics.userLocation.city || 'Chargement...'}
                   </div>
-                  <div className="text-gray-400">
+                  <div className="text-gray-600">
                     {metrics.userLocation.region}
                   </div>
                 </div>
                 
                 <div className="text-center">
-                  <div className="text-gray-400 text-sm mb-2">Latence serveur</div>
+                  <div className="text-gray-600 text-sm mb-2">Latence serveur</div>
                   <div className="relative inline-block">
-                    <div className="text-5xl font-bold text-white">
+                    <div className="text-5xl font-bold text-gray-900">
                       {metrics.latency}ms
                     </div>
                     <motion.div
@@ -407,14 +407,14 @@ export default function TechnicalShowcase() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-gray-800/50 rounded-lg p-4 text-center">
+                  <div className="bg-gray-50 rounded-lg p-4 text-center border border-gray-200">
                     <div className="text-2xl mb-1">🔒</div>
-                    <div className="text-sm text-gray-400">HTTPS</div>
+                    <div className="text-sm text-gray-600">HTTPS</div>
                     <div className="text-green-400 font-medium">Activé</div>
                   </div>
-                  <div className="bg-gray-800/50 rounded-lg p-4 text-center">
+                  <div className="bg-gray-50 rounded-lg p-4 text-center border border-gray-200">
                     <div className="text-2xl mb-1">⚡</div>
-                    <div className="text-sm text-gray-400">HTTP/2</div>
+                    <div className="text-sm text-gray-600">HTTP/2</div>
                     <div className="text-green-400 font-medium">Activé</div>
                   </div>
                 </div>
@@ -423,14 +423,14 @@ export default function TechnicalShowcase() {
           </div>
           
           {/* Message de conclusion */}
-          <div className="p-6 border-t border-gray-600 bg-gradient-to-r from-gray-900 to-black">
+          <div className="p-6 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-white rounded-b-xl">
             <div className="text-center space-y-3">
-              <p className="text-xl font-display text-gold-500">
+              <p className="text-xl font-display text-[#DA6530]">
                 Un site lent, c'est un site mort.
               </p>
-              <p className="text-gray-400">
+              <p className="text-gray-600">
                 Ne laissez pas la technique saboter votre succès. 
-                <span className="text-white font-medium"> Investissez dans la performance.</span>
+                <span className="text-gray-900 font-medium"> Investissez dans la performance.</span>
               </p>
             </div>
           </div>
@@ -445,8 +445,8 @@ const MetricCard = ({ icon, title, value, subtitle, status }: any) => (
   <motion.div
     className={`p-4 rounded-lg bg-gradient-to-br ${
       status === 'excellent' 
-        ? 'from-green-500/20 to-green-600/10 border border-green-500/20' 
-        : 'from-blue-500/20 to-blue-600/10 border border-blue-500/20'
+        ? 'from-green-500/10 to-green-600/5 border border-green-500/30' 
+        : 'from-[#199CB7]/10 to-[#199CB7]/5 border border-[#199CB7]/30'
     }`}
     whileHover={{ scale: 1.02 }}
     transition={{ type: "spring", stiffness: 300 }}
@@ -454,14 +454,14 @@ const MetricCard = ({ icon, title, value, subtitle, status }: any) => (
     <div className="flex items-start justify-between">
       <div>
         <div className="text-2xl mb-2">{icon}</div>
-        <div className="text-sm text-gray-400">{title}</div>
-        <div className="text-2xl font-bold text-white mt-1">{value}</div>
+        <div className="text-sm text-gray-600">{title}</div>
+        <div className="text-2xl font-bold text-gray-900 mt-1">{value}</div>
         {subtitle && (
           <div className="text-xs text-gray-500 mt-1">{subtitle}</div>
         )}
       </div>
       {status === 'excellent' && (
-        <div className="text-green-400 text-sm">✓</div>
+        <div className="text-green-500 text-sm">✓</div>
       )}
     </div>
   </motion.div>
@@ -469,18 +469,18 @@ const MetricCard = ({ icon, title, value, subtitle, status }: any) => (
 
 const SEOItem = ({ label, status, detail, warning, recommendation }: any) => (
   <div className="space-y-2">
-    <div className="flex items-center justify-between p-3 bg-gray-800/30 rounded-lg">
+    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
       <div className="flex items-center space-x-3">
-        <div className={`w-2 h-2 rounded-full ${status ? 'bg-green-400' : warning ? 'bg-yellow-400' : 'bg-red-400'}`} />
-        <span className="text-gray-300">{label}</span>
+        <div className={`w-2 h-2 rounded-full ${status ? 'bg-green-500' : warning ? 'bg-[#DA6530]' : 'bg-[#8B1431]'}`} />
+        <span className="text-gray-700">{label}</span>
       </div>
       <div className="text-right">
-        <span className="text-gray-500 text-sm">{detail}</span>
-        {warning && <div className="text-yellow-400 text-xs mt-1">{warning}</div>}
+        <span className="text-gray-600 text-sm">{detail}</span>
+        {warning && <div className="text-[#DA6530] text-xs mt-1">{warning}</div>}
       </div>
     </div>
     {recommendation && (
-      <div className="ml-6 px-3 py-2 text-xs text-gray-400 italic bg-gray-900/50 rounded border-l-2 border-gold-500/30">
+      <div className="ml-6 px-3 py-2 text-xs text-gray-600 italic bg-[#DA6530]/5 rounded border-l-2 border-[#DA6530]/30">
         💡 {recommendation}
       </div>
     )}
@@ -490,12 +490,12 @@ const SEOItem = ({ label, status, detail, warning, recommendation }: any) => (
 const PerformanceBar = ({ percentage }: any) => (
   <div className="space-y-2">
     <div className="flex justify-between text-sm">
-      <span className="text-gray-400">Performance globale</span>
-      <span className="text-white font-bold">{percentage}%</span>
+      <span className="text-gray-600">Performance globale</span>
+      <span className="text-gray-900 font-bold">{percentage}%</span>
     </div>
-    <div className="h-4 bg-gray-800 rounded-full overflow-hidden">
+    <div className="h-4 bg-gray-200 rounded-full overflow-hidden">
       <motion.div
-        className="h-full bg-gradient-to-r from-gold-500 to-gold-600"
+        className="h-full bg-gradient-to-r from-[#DA6530] to-[#DA6530]"
         initial={{ width: 0 }}
         animate={{ width: `${percentage}%` }}
         transition={{ duration: 1.5, ease: "easeOut" }}

@@ -116,9 +116,10 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['var(--font-inter)'],
-        serif: ['var(--font-playfair)'],
-        display: ['var(--font-bebas)'],
+        sans: ['var(--font-montserrat)', 'system-ui', 'sans-serif'],
+        serif: ['var(--font-lora)', 'Georgia', 'serif'],
+        display: ['var(--font-montserrat)', 'system-ui', 'sans-serif'],
+        body: ['var(--font-inter)', 'system-ui', 'sans-serif'],
       },
       backgroundImage: {
         'gradient-primary': 'linear-gradient(135deg, #8B1431 0%, #6B0F26 100%)',

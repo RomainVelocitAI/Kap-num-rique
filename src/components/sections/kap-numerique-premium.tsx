@@ -122,20 +122,19 @@ export default function KapNumeriquePremium() {
       style={{ position: 'relative', zIndex: 20 }}
     >
       {/* Premium separation from hero */}
-      <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-black to-transparent opacity-20" />
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-500 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-gray-100 to-transparent opacity-20" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#DA6530] to-transparent" />
       
       {/* Animated background elements */}
       <motion.div 
         className="absolute inset-0 opacity-[0.03]"
         style={{ y: parallaxY }}
       >
-        <div className="absolute top-20 right-20 w-96 h-96 bg-gold-500 rounded-full blur-3xl" />
+        <div className="absolute top-20 right-20 w-96 h-96 bg-[#DA6530] rounded-full blur-3xl" />
         <div className="absolute bottom-20 left-20 w-96 h-96 bg-primary-500 rounded-full blur-3xl" />
       </motion.div>
 
-      {/* Grid pattern overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]" />
+      {/* Removed grid pattern for cleaner look */}
 
       <div className="relative z-10 container mx-auto px-4 pt-32 pb-20" style={{ isolation: 'isolate' }}>
         {/* Hero Statement */}
@@ -143,7 +142,7 @@ export default function KapNumeriquePremium() {
           <div className="flex flex-wrap justify-center items-center gap-4 mb-8">
             <span className="hero-word text-5xl md:text-7xl font-display text-gray-900">SITE</span>
             <span className="hero-word text-5xl md:text-7xl font-display text-gray-900">SUBVENTIONNÉ</span>
-            <span className="hero-word text-6xl md:text-8xl font-display text-red-600">≠</span>
+            <span className="hero-word text-6xl md:text-8xl font-display text-[#8B1431]">≠</span>
             <span className="hero-word text-5xl md:text-7xl font-display text-gray-400 line-through decoration-4">SITE BÂCLÉ</span>
           </div>
           <p className="hero-word text-xl md:text-2xl text-gray-600 mt-6 max-w-3xl mx-auto">
@@ -157,11 +156,11 @@ export default function KapNumeriquePremium() {
         {/* Interactive Comparison Section */}
         <div ref={comparisonRef} className="mb-16 max-w-7xl mx-auto">
           <h3 className="text-5xl md:text-8xl font-display text-center mb-16 text-gray-900 uppercase tracking-tight">
-            CE QU'ILS NE VOUS <span className="text-red-600">DIRONT</span> <span className="bg-gradient-to-r from-gold-500 to-gold-600 bg-clip-text text-transparent">JAMAIS</span>
+            CE QU'ILS NE VOUS <span className="text-[#8B1431]">DIRONT</span> <span className="bg-gradient-to-r from-[#DA6530] to-[#DA6530] bg-clip-text text-transparent">JAMAIS</span>
           </h3>
           
           <div 
-            className="relative h-[700px] rounded-none overflow-hidden cursor-ew-resize shadow-2xl border-8 border-black"
+            className="relative h-[700px] rounded-none overflow-hidden cursor-ew-resize shadow-2xl border-8 border-gray-200"
             onMouseDown={() => setIsDragging(true)}
             onMouseUp={() => setIsDragging(false)}
             onMouseLeave={() => setIsDragging(false)}
@@ -171,7 +170,7 @@ export default function KapNumeriquePremium() {
             onTouchMove={handleSliderMove}
           >
             {/* Left side - Templates Réchauffés */}
-            <div className="absolute inset-0 bg-black">
+            <div className="absolute inset-0 bg-gray-900">
               <div className="p-8 md:p-12 h-full flex flex-col">
                 {/* Effet néon cassé */}
                 <div className="absolute inset-0 opacity-10">
@@ -181,23 +180,23 @@ export default function KapNumeriquePremium() {
                 <h4 className="text-4xl md:text-6xl font-display text-white mb-2 tracking-wider">
                   ILS VOUS FONT UN
                 </h4>
-                <h4 className="text-5xl md:text-7xl font-display text-red-600 mb-8 animate-pulse">
+                <h4 className="text-5xl md:text-7xl font-display text-[#8B1431] mb-8 animate-pulse">
                   SITE VITRINE
                 </h4>
                 
                 <div className="flex-1">
                   <div className="grid grid-cols-2 gap-4 md:gap-6 max-w-4xl mx-auto">
                     {/* Site template générique */}
-                    <div className="bg-gray-900 border-2 border-red-600 p-4 md:p-6 transform -rotate-2 hover:rotate-0 transition-transform">
+                    <div className="bg-gray-900 border-2 border-[#8B1431] p-4 md:p-6 transform -rotate-2 hover:rotate-0 transition-transform">
                       <div className="flex items-center gap-3 mb-4">
-                        <X className="w-10 h-10 text-red-600" strokeWidth={3} />
+                        <X className="w-10 h-10 text-[#8B1431]" strokeWidth={3} />
                         <h5 className="font-display text-xl text-white tracking-wide">SITE TEMPLATE</h5>
                       </div>
                       <div className="text-center py-4">
                         <p className="text-3xl font-bold text-gray-500 mb-2">COPIÉ-COLLÉ</p>
                         <p className="text-sm text-gray-400">Comme 1000 autres</p>
                       </div>
-                      <p className="font-sans font-bold text-red-400 uppercase text-sm text-center">
+                      <p className="font-sans font-bold text-[#8B1431]/70 uppercase text-sm text-center">
                         Zéro personnalité
                       </p>
                     </div>
@@ -205,14 +204,14 @@ export default function KapNumeriquePremium() {
                     {/* Version obsolète */}
                     <div className="bg-gray-900 border-2 border-red-600 p-4 md:p-6 transform rotate-2 hover:rotate-0 transition-transform">
                       <div className="flex items-center gap-3 mb-4">
-                        <X className="w-10 h-10 text-red-600" strokeWidth={3} />
+                        <X className="w-10 h-10 text-[#8B1431]" strokeWidth={3} />
                         <h5 className="font-display text-xl text-white tracking-wide">JAMAIS MIS À JOUR</h5>
                       </div>
                       <div className="text-center py-4">
                         <p className="text-3xl font-bold text-gray-500">2019</p>
                         <p className="text-sm text-gray-400">Dernière MAJ</p>
                       </div>
-                      <p className="font-sans font-bold text-red-400 uppercase text-sm text-center">
+                      <p className="font-sans font-bold text-[#8B1431]/70 uppercase text-sm text-center">
                         Technologie dépassée
                       </p>
                     </div>
@@ -220,14 +219,14 @@ export default function KapNumeriquePremium() {
                     {/* Invisible sur Google */}
                     <div className="bg-gray-900 border-2 border-red-600 p-4 md:p-6 transform -rotate-1 hover:rotate-0 transition-transform">
                       <div className="flex items-center gap-3 mb-4">
-                        <X className="w-10 h-10 text-red-600" strokeWidth={3} />
+                        <X className="w-10 h-10 text-[#8B1431]" strokeWidth={3} />
                         <h5 className="font-display text-xl text-white tracking-wide">ZÉRO SEO</h5>
                       </div>
                       <div className="text-center py-4">
                         <p className="text-3xl font-bold text-gray-500">PAGE 10</p>
                         <p className="text-sm text-gray-400">sur Google</p>
                       </div>
-                      <p className="font-sans font-bold text-red-400 uppercase text-sm text-center">
+                      <p className="font-sans font-bold text-[#8B1431]/70 uppercase text-sm text-center">
                         Personne ne vous trouve
                       </p>
                     </div>
@@ -235,14 +234,14 @@ export default function KapNumeriquePremium() {
                     {/* Performance catastrophique */}
                     <div className="bg-gray-900 border-2 border-red-600 p-4 md:p-6 transform rotate-1 hover:rotate-0 transition-transform">
                       <div className="flex items-center gap-3 mb-4">
-                        <X className="w-10 h-10 text-red-600" strokeWidth={3} />
+                        <X className="w-10 h-10 text-[#8B1431]" strokeWidth={3} />
                         <h5 className="font-display text-xl text-white tracking-wide">SCORE AU ROUGE</h5>
                       </div>
                       <div className="text-center py-4">
-                        <p className="text-4xl font-bold text-red-500">40/100</p>
+                        <p className="text-4xl font-bold text-[#8B1431]">40/100</p>
                         <p className="text-sm text-gray-400">Performance</p>
                       </div>
-                      <p className="font-sans font-bold text-red-400 uppercase text-sm text-center">
+                      <p className="font-sans font-bold text-[#8B1431]/70 uppercase text-sm text-center">
                         Lent comme un escargot
                       </p>
                     </div>
@@ -250,7 +249,7 @@ export default function KapNumeriquePremium() {
                 </div>
 
                 <div className="text-center mt-8">
-                  <p className="text-5xl font-display text-red-600 mb-2 animate-pulse">TRAVAIL BÂCLÉ</p>
+                  <p className="text-5xl font-display text-[#8B1431] mb-2 animate-pulse">TRAVAIL BÂCLÉ</p>
                   <p className="font-sans font-bold text-gray-400 uppercase tracking-wider">
                     Parce que "c'est gratuit pour vous"
                   </p>
@@ -260,7 +259,7 @@ export default function KapNumeriquePremium() {
 
             {/* Right side - Kap Premium */}
             <div 
-              className="absolute inset-0 bg-gradient-to-br from-gold-400 via-gold-500 to-gold-600"
+              className="absolute inset-0 bg-gradient-to-br from-[#DA6530] via-[#DA6530] to-[#DA6530]"
               style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
             >
               <div className="p-8 md:p-12 h-full flex flex-col">
@@ -269,7 +268,7 @@ export default function KapNumeriquePremium() {
                   <div className="absolute bottom-10 right-10 w-96 h-96 bg-white rounded-full blur-3xl animate-shimmer" />
                 </div>
                 
-                <h4 className="text-4xl md:text-6xl font-display text-black mb-2 tracking-wider">
+                <h4 className="text-4xl md:text-6xl font-display text-gray-900 mb-2 tracking-wider">
                   NOUS CRÉONS UNE
                 </h4>
                 <h4 className="text-5xl md:text-7xl font-display text-white mb-8" style={{ textShadow: '3px 3px 0 #000' }}>
@@ -279,61 +278,61 @@ export default function KapNumeriquePremium() {
                 <div className="flex-1">
                   <div className="grid grid-cols-2 gap-4 md:gap-6 max-w-4xl mx-auto">
                     {/* Design unique */}
-                    <div className="bg-black text-white p-4 md:p-6 transform -rotate-2 hover:rotate-0 transition-transform shadow-xl">
+                    <div className="bg-white text-gray-900 border border-gray-200 p-4 md:p-6 transform -rotate-2 hover:rotate-0 transition-transform shadow-xl">
                       <div className="flex items-center gap-3 mb-4">
-                        <Crown className="w-10 h-10 text-gold-400" strokeWidth={3} />
+                        <Crown className="w-10 h-10 text-[#DA6530]" strokeWidth={3} />
                         <h5 className="font-display text-xl tracking-wide">100% SUR MESURE</h5>
                       </div>
                       <div className="text-center py-4">
-                        <p className="text-3xl font-bold text-gold-400 mb-2">UNIQUE</p>
-                        <p className="text-sm text-gold-300">Votre identité</p>
+                        <p className="text-3xl font-bold text-[#DA6530] mb-2">UNIQUE</p>
+                        <p className="text-sm text-[#DA6530]/70">Votre identité</p>
                       </div>
-                      <p className="font-sans font-bold uppercase text-sm text-gold-400 text-center">
+                      <p className="font-sans font-bold uppercase text-sm text-[#DA6530] text-center">
                         Créé spécialement pour vous
                       </p>
                     </div>
 
                     {/* 100% automatisé */}
-                    <div className="bg-black text-white p-4 md:p-6 transform rotate-2 hover:rotate-0 transition-transform shadow-xl">
+                    <div className="bg-white text-gray-900 border border-gray-200 p-4 md:p-6 transform rotate-2 hover:rotate-0 transition-transform shadow-xl">
                       <div className="flex items-center gap-3 mb-4">
-                        <Rocket className="w-10 h-10 text-gold-400" strokeWidth={3} />
+                        <Rocket className="w-10 h-10 text-[#DA6530]" strokeWidth={3} />
                         <h5 className="font-display text-xl tracking-wide">100% AUTOMATISÉ</h5>
                       </div>
                       <div className="text-center py-4">
-                        <p className="text-3xl font-bold text-gold-400">24/7</p>
-                        <p className="text-sm text-gold-300">sans vous</p>
+                        <p className="text-3xl font-bold text-[#DA6530]">24/7</p>
+                        <p className="text-sm text-[#DA6530]/70">sans vous</p>
                       </div>
-                      <p className="font-sans font-bold uppercase text-sm text-gold-400 text-center">
+                      <p className="font-sans font-bold uppercase text-sm text-[#DA6530] text-center">
                         Assistant IA 24/7
                       </p>
                     </div>
 
                     {/* Première page Google */}
-                    <div className="bg-black text-white p-4 md:p-6 transform -rotate-1 hover:rotate-0 transition-transform shadow-xl">
+                    <div className="bg-white text-gray-900 border border-gray-200 p-4 md:p-6 transform -rotate-1 hover:rotate-0 transition-transform shadow-xl">
                       <div className="flex items-center gap-3 mb-4">
-                        <Shield className="w-10 h-10 text-gold-400" strokeWidth={3} />
+                        <Shield className="w-10 h-10 text-[#DA6530]" strokeWidth={3} />
                         <h5 className="font-display text-xl tracking-wide">TOP GOOGLE</h5>
                       </div>
                       <div className="text-center py-4">
-                        <p className="text-3xl font-bold text-gold-400">PAGE 1</p>
-                        <p className="text-sm text-gold-300">garanti</p>
+                        <p className="text-3xl font-bold text-[#DA6530]">PAGE 1</p>
+                        <p className="text-sm text-[#DA6530]/70">garanti</p>
                       </div>
-                      <p className="font-sans font-bold uppercase text-sm text-gold-400 text-center">
+                      <p className="font-sans font-bold uppercase text-sm text-[#DA6530] text-center">
                         SEO intégré, vous dominez
                       </p>
                     </div>
 
                     {/* Score 90+ garanti */}
-                    <div className="bg-black text-white p-4 md:p-6 transform rotate-1 hover:rotate-0 transition-transform shadow-xl">
+                    <div className="bg-white text-gray-900 border border-gray-200 p-4 md:p-6 transform rotate-1 hover:rotate-0 transition-transform shadow-xl">
                       <div className="flex items-center gap-3 mb-4">
-                        <Award className="w-10 h-10 text-gold-400" strokeWidth={3} />
+                        <Award className="w-10 h-10 text-[#DA6530]" strokeWidth={3} />
                         <h5 className="font-display text-xl tracking-wide">PERFORMANCE MAX</h5>
                       </div>
                       <div className="text-center py-4">
                         <p className="text-4xl font-bold text-green-400">90+/100</p>
-                        <p className="text-sm text-gold-300">Score garanti</p>
+                        <p className="text-sm text-[#DA6530]/70">Score garanti</p>
                       </div>
-                      <p className="font-sans font-bold uppercase text-sm text-gold-400 text-center">
+                      <p className="font-sans font-bold uppercase text-sm text-[#DA6530] text-center">
                         Ultra rapide, Google vous adore
                       </p>
                     </div>
@@ -341,10 +340,10 @@ export default function KapNumeriquePremium() {
                 </div>
 
                 <div className="text-center mt-8">
-                  <p className="text-5xl font-display text-black mb-2" style={{ textShadow: '2px 2px 0 #FFD700' }}>
+                  <p className="text-5xl font-display text-gray-900 mb-2" style={{ textShadow: '2px 2px 0 #DA6530' }}>
                     SITE QUI RAPPORTE
                   </p>
-                  <p className="font-sans font-bold text-black uppercase tracking-wider">
+                  <p className="font-sans font-bold text-gray-900 uppercase tracking-wider">
                     Votre meilleur commercial
                   </p>
                 </div>
@@ -364,7 +363,7 @@ export default function KapNumeriquePremium() {
             </div>
 
             {/* Instructions */}
-            <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-black/75 text-white px-6 py-3 rounded-full text-sm font-medium pointer-events-none">
+            <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800/75 text-white px-6 py-3 rounded-full text-sm font-medium pointer-events-none">
               Glissez pour découvrir la différence
             </div>
           </div>
@@ -377,7 +376,7 @@ export default function KapNumeriquePremium() {
             <div className="text-center mb-20">
               <h2 className="text-5xl md:text-7xl font-display font-black mb-6">
                 <span className="text-gray-900">LA DIFFÉRENCE</span>{' '}
-                <span className="bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">DIGIQO</span>
+                <span className="bg-gradient-to-r from-[#8B1431] to-[#8B1431] bg-clip-text text-transparent">DIGIQO</span>
               </h2>
               <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto">
                 Nous ne sommes pas une agence web classique. Nous sommes vos partenaires numériques.
@@ -418,10 +417,10 @@ export default function KapNumeriquePremium() {
 
               {/* 2. Technologie de pointe */}
               <div className="group relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-red-600 to-red-700 rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#8B1431] to-[#8B1431] rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-500" />
                 <div className="relative bg-white/80 backdrop-blur-xl border border-gray-200 rounded-3xl p-8 hover:transform hover:scale-105 transition-all duration-300">
-                  <div className="bg-gradient-to-br from-red-100 to-red-200 w-20 h-20 rounded-2xl flex items-center justify-center mb-6">
-                    <Rocket className="w-10 h-10 text-red-600" strokeWidth={2.5} />
+                  <div className="bg-gradient-to-br from-[#8B1431]/10 to-[#8B1431]/20 w-20 h-20 rounded-2xl flex items-center justify-center mb-6">
+                    <Rocket className="w-10 h-10 text-[#8B1431]" strokeWidth={2.5} />
                   </div>
                   <h4 className="text-2xl font-bold text-gray-900 mb-4">
                     Site nouvelle génération
@@ -431,15 +430,15 @@ export default function KapNumeriquePremium() {
                   </p>
                   <div className="space-y-3">
                     <div className="flex items-start gap-3">
-                      <Check className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
+                      <Check className="w-5 h-5 text-[#8B1431] mt-0.5 flex-shrink-0" />
                       <span className="text-sm text-gray-700">Next.js 15 + React dernière génération</span>
                     </div>
                     <div className="flex items-start gap-3">
-                      <Check className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
+                      <Check className="w-5 h-5 text-[#8B1431] mt-0.5 flex-shrink-0" />
                       <span className="text-sm text-gray-700">Performance optimale (score 90+)</span>
                     </div>
                     <div className="flex items-start gap-3">
-                      <Check className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
+                      <Check className="w-5 h-5 text-[#8B1431] mt-0.5 flex-shrink-0" />
                       <span className="text-sm text-gray-700">Formulaires automatisés</span>
                     </div>
                   </div>
@@ -448,10 +447,10 @@ export default function KapNumeriquePremium() {
 
               {/* 3. ROI Garanti */}
               <div className="group relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-gold-500 to-gold-600 rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#DA6530] to-[#DA6530] rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-500" />
                 <div className="relative bg-white/80 backdrop-blur-xl border border-gray-200 rounded-3xl p-8 hover:transform hover:scale-105 transition-all duration-300">
-                  <div className="bg-gradient-to-br from-gold-100 to-gold-200 w-20 h-20 rounded-2xl flex items-center justify-center mb-6">
-                    <TrendingUp className="w-10 h-10 text-gold-600" strokeWidth={2.5} />
+                  <div className="bg-gradient-to-br from-[#DA6530]/10 to-[#DA6530]/20 w-20 h-20 rounded-2xl flex items-center justify-center mb-6">
+                    <TrendingUp className="w-10 h-10 text-[#DA6530]" strokeWidth={2.5} />
                   </div>
                   <h4 className="text-2xl font-bold text-gray-900 mb-4">
                     Résultats mesurables
@@ -461,11 +460,11 @@ export default function KapNumeriquePremium() {
                   </p>
                   <div className="space-y-3">
                     <div className="flex items-start gap-3">
-                      <Check className="w-5 h-5 text-gold-600 mt-0.5 flex-shrink-0" />
+                      <Check className="w-5 h-5 text-[#DA6530] mt-0.5 flex-shrink-0" />
                       <span className="text-sm text-gray-700">SEO local optimisé pour La Réunion</span>
                     </div>
                     <div className="flex items-start gap-3">
-                      <Check className="w-5 h-5 text-gold-600 mt-0.5 flex-shrink-0" />
+                      <Check className="w-5 h-5 text-[#DA6530] mt-0.5 flex-shrink-0" />
                       <span className="text-sm text-gray-700">Tracking & analytics configurés</span>
                     </div>
                   </div>
@@ -481,11 +480,11 @@ export default function KapNumeriquePremium() {
                   <p className="text-gray-400">Conforme Kap Numérik</p>
                 </div>
                 <div>
-                  <div className="text-5xl font-display font-black text-red-400 mb-2">100%</div>
+                  <div className="text-5xl font-display font-black text-[#8B1431] mb-2">100%</div>
                   <p className="text-gray-400">Clients satisfaits</p>
                 </div>
                 <div>
-                  <div className="text-5xl font-display font-black text-gold-400 mb-2">90+</div>
+                  <div className="text-5xl font-display font-black text-[#DA6530] mb-2">90+</div>
                   <p className="text-gray-400">Score performance</p>
                 </div>
                 <div>
@@ -507,7 +506,7 @@ export default function KapNumeriquePremium() {
           </p>
           
           <motion.button
-            className="relative bg-gradient-to-r from-gold-500 to-gold-600 text-white font-bold text-xl py-6 px-12 rounded-full shadow-2xl hover:shadow-gold-500/25 transition-all duration-300"
+            className="relative bg-gradient-to-r from-[#DA6530] to-[#DA6530] text-white font-bold text-xl py-6 px-12 rounded-full shadow-2xl hover:shadow-[#DA6530]/25 transition-all duration-300"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter, Playfair_Display, Bebas_Neue } from 'next/font/google'
+import { Inter, Lora, Montserrat, Bebas_Neue } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
 import '../styles/globals.css'
 
@@ -11,9 +11,17 @@ const inter = Inter({
   fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
 })
 
-const playfair = Playfair_Display({ 
+const montserrat = Montserrat({ 
   subsets: ['latin'],
-  variable: '--font-playfair',
+  variable: '--font-montserrat',
+  display: 'swap',
+  preload: true,
+  fallback: ['system-ui', 'sans-serif'],
+})
+
+const lora = Lora({ 
+  subsets: ['latin'],
+  variable: '--font-lora',
   display: 'swap',
   preload: false, // Pas critique pour le FCP
   fallback: ['Georgia', 'serif'],
@@ -93,7 +101,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="fr" className={`${inter.variable} ${playfair.variable} ${bebas.variable}`}>
+    <html lang="fr" className={`${inter.variable} ${montserrat.variable} ${lora.variable} ${bebas.variable}`}>
       <body className="font-sans antialiased">
         {children}
         <Analytics />

@@ -2,7 +2,8 @@
 
 import { useState, useEffect, Suspense } from 'react'
 import dynamic from 'next/dynamic'
-import Header from '../components/layout/Header'
+import HeaderDigiqo from '../components/layout/HeaderDigiqo'
+import FooterDigiqo from '../components/layout/FooterDigiqo'
 import HeroClient from '../components/sections/hero-client'
 import KapNumeriquePremium from '../components/sections/kap-numerique-premium'
 import InteractivitySection from '../components/sections/interactivity-section'
@@ -14,8 +15,8 @@ const TechnicalShowcase = dynamic(
   {
     ssr: true,
     loading: () => (
-      <div className="min-h-[400px] bg-black flex items-center justify-center">
-        <div className="text-white text-2xl">Chargement des métriques techniques...</div>
+      <div className="min-h-[400px] bg-gray-50 flex items-center justify-center">
+        <div className="text-gray-700 text-2xl">Chargement des métriques techniques...</div>
       </div>
     ),
   }
@@ -26,8 +27,8 @@ const VisualEngagementSection = dynamic(
   {
     ssr: true,
     loading: () => (
-      <div className="min-h-[400px] bg-gray-900 flex items-center justify-center">
-        <div className="text-white text-2xl">Chargement des animations...</div>
+      <div className="min-h-[400px] bg-gray-50 flex items-center justify-center">
+        <div className="text-gray-700 text-2xl">Chargement des animations...</div>
       </div>
     ),
   }
@@ -52,7 +53,7 @@ export default function Home() {
       <h1 className="sr-only">
         Création de Sites Web Professionnels à La Réunion - Kap Numérique - Développement Digital
       </h1>
-      {showHeader && <Header />}
+      {showHeader && <HeaderDigiqo />}
       <main>
         <HeroClient />
         {/* Masque pour cacher le canvas Three.js après le Hero */}
@@ -66,8 +67,8 @@ export default function Home() {
         >
           <KapNumeriquePremium />
           <Suspense fallback={
-            <div className="min-h-[400px] bg-black flex items-center justify-center">
-              <div className="text-white text-2xl">Chargement...</div>
+            <div className="min-h-[400px] bg-gray-50 flex items-center justify-center">
+              <div className="text-gray-700 text-2xl">Chargement...</div>
             </div>
           }>
             <VisualEngagementSection />
@@ -77,6 +78,7 @@ export default function Home() {
           <KapNumerikOfferSection />
         </div>
       </main>
+      <FooterDigiqo />
     </>
   )
 }
