@@ -374,13 +374,13 @@ export default function KapNumerikOfferSection() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="bg-gradient-to-br from-gray-900 to-black rounded-3xl p-8 border border-primary-500/30"
+              className="bg-gradient-to-br from-white to-gray-50 rounded-3xl p-8 border border-[#199CB7]/30 shadow-lg"
             >
               {!showResult ? (
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Type de structure */}
                   <div>
-                    <label className="text-sm text-gray-600 mb-3 block">Type de structure</label>
+                    <label className="text-sm text-gray-700 font-medium mb-3 block">Type de structure</label>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                       {[
                         { value: 'entreprise', label: 'Entreprise', icon: Globe },
@@ -393,8 +393,8 @@ export default function KapNumerikOfferSection() {
                           onClick={() => setCompanyType(type.value)}
                           className={`p-4 rounded-xl border-2 transition-all ${
                             companyType === type.value
-                              ? 'border-[#199CB7] bg-[#199CB7]/10 text-gray-900'
-                              : 'border-gray-300 text-gray-600 hover:border-gray-400'
+                              ? 'border-[#199CB7] bg-[#199CB7]/10 text-[#199CB7] font-semibold'
+                              : 'border-gray-300 text-gray-600 hover:border-[#199CB7]/50'
                           }`}
                         >
                           <type.icon className="w-6 h-6 mx-auto mb-2" />
@@ -406,7 +406,7 @@ export default function KapNumerikOfferSection() {
 
                   {/* Nombre de salariés */}
                   <div>
-                    <label className="text-sm text-gray-700 mb-3 block">Nombre de salariés</label>
+                    <label className="text-sm text-gray-700 font-medium mb-3 block">Nombre de salariés</label>
                     <input
                       type="number"
                       value={employees}
@@ -419,7 +419,7 @@ export default function KapNumerikOfferSection() {
 
                   {/* Chiffre d'affaires */}
                   <div>
-                    <label className="text-sm text-gray-700 mb-3 block">Chiffre d'affaires annuel (€)</label>
+                    <label className="text-sm text-gray-700 font-medium mb-3 block">Chiffre d'affaires annuel (€)</label>
                     <input
                       type="number"
                       value={revenue}
@@ -432,7 +432,7 @@ export default function KapNumerikOfferSection() {
 
                   {/* Localisation */}
                   <div>
-                    <label className="text-sm text-gray-700 mb-3 block">Siège social</label>
+                    <label className="text-sm text-gray-700 font-medium mb-3 block">Siège social</label>
                     <select
                       value={location}
                       onChange={(e) => setLocation(e.target.value)}
@@ -466,12 +466,12 @@ export default function KapNumerikOfferSection() {
                         <Check className="w-10 h-10 text-green-500" />
                       </div>
                       <h4 className="text-3xl font-bold text-green-500 mb-4">Félicitations ! Vous êtes éligible</h4>
-                      <div className="bg-green-900/20 rounded-2xl p-6 mb-6 border border-green-500/30">
+                      <div className="bg-green-50 rounded-2xl p-6 mb-6 border border-green-200">
                         <p className="text-xl text-gray-900 mb-2">
-                          Votre site web sera subventionné à <span className="font-bold text-green-400">{checkEligibility().percentage}%</span>
+                          Votre site web sera subventionné à <span className="font-bold text-green-600">{checkEligibility().percentage}%</span>
                         </p>
                         <p className="text-lg text-gray-600">
-                          Jusqu'à <span className="font-bold text-green-400">{checkEligibility().max}€</span> de subvention
+                          Jusqu'à <span className="font-bold text-green-600">{checkEligibility().max}€</span> de subvention
                         </p>
                       </div>
                       <p className="text-gray-700 mb-8">
