@@ -15,9 +15,7 @@ export const ContainerScroll = ({
   });
   const [isMobile, setIsMobile] = React.useState(false);
   
-  React.useEffect(() => {
-    console.log('ContainerScroll mounted with children:', children);
-  }, [children]);
+  // Removed debug log for cleaner console output
 
   React.useEffect(() => {
     const checkMobile = () => {

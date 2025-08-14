@@ -140,14 +140,7 @@ const HorizonHeroSection = () => {
       // Mark as ready after Three.js is initialized
       setIsReady(true);
       
-      // Debug log
-      console.log('Three.js initialized:', {
-        scene: refs.scene,
-        camera: refs.camera,
-        renderer: refs.renderer,
-        starsCount: refs.stars.length,
-        mountainsCount: refs.mountains.length
-      });
+      // Three.js successfully initialized
     };
 
     const createStarField = () => {
@@ -512,12 +505,7 @@ const HorizonHeroSection = () => {
       visibility: 'visible'
     });
     
-    console.log('GSAP animations starting', {
-      menu: menuRef.current,
-      title: titleRef.current,
-      subtitle: subtitleRef.current,
-      scrollProgress: scrollProgressRef.current
-    });
+    // GSAP animations initialized
 
     // Animate menu
     if (menuRef.current) {

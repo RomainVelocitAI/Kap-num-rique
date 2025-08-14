@@ -8,6 +8,7 @@ import HeroClient from '../components/sections/hero-client'
 import KapNumeriquePremium from '../components/sections/kap-numerique-premium'
 import InteractivitySection from '../components/sections/interactivity-section'
 import KapNumerikOfferSection from '../components/sections/kap-numerik-offer'
+import { ContactSection } from '../components/ContactSection/ContactSection'
 
 // Import dynamique des sections qui causent des problèmes
 const TechnicalShowcase = dynamic(
@@ -76,6 +77,7 @@ export default function Home() {
             <TechnicalShowcase />
           </Suspense>
           <InteractivitySection />
+          <ContactSection />
         </div>
       </main>
       <FooterDigiqo />

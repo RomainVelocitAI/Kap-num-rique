@@ -509,6 +509,12 @@ export default function KapNumeriquePremium() {
             className="relative bg-gradient-to-r from-[#DA6530] to-[#DA6530] text-white font-bold text-xl py-6 px-12 rounded-full shadow-2xl hover:shadow-[#DA6530]/25 transition-all duration-300"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            onClick={() => {
+              const contactSection = document.getElementById('contact')
+              if (contactSection) {
+                contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
+              }
+            }}
           >
             <span className="relative z-10">JE VEUX UN SITE QUI CARTONNE</span>
             <Rocket className="inline-block ml-3 w-6 h-6" />
