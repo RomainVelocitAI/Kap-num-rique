@@ -65,6 +65,7 @@ export default function Home() {
             boxShadow: '0 -50px 100px 50px rgba(255,255,255,1)'
           }}
         >
+          <KapNumerikOfferSection />
           <KapNumeriquePremium />
           <Suspense fallback={
             <div className="min-h-[400px] bg-gray-50 flex items-center justify-center">
@@ -75,7 +76,6 @@ export default function Home() {
             <TechnicalShowcase />
           </Suspense>
           <InteractivitySection />
-          <KapNumerikOfferSection />
         </div>
       </main>
       <FooterDigiqo />
